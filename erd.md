@@ -37,7 +37,77 @@ When a user creates a journey, the JSON payload might look like this:
   ```
 
 
-chain coach
-create content
-create QA (optional)
 create journy
+
+```json
+{
+  "readingHoursPerDay": 2,
+  "titles": ["Python for Beginners", "Data Science with Pandas", "Machine Learning with Scikit-learn"]
+}
+```
+
+```json
+{
+  "months": [
+    {
+      "month": "January",
+      "weeks": [
+        {
+          "week": 1,
+          "title": "Introduction to Python",
+          "description": "Learn the basic syntax and data structures of Python.",
+          "lessonTitles": ["Variables and Data Types", "Basic Operators", "Input and Output"]
+        },
+        {
+          "week": 2,
+          "title": "Control Flow in Python",
+          "description": "Learn how to control the flow of execution in Python programs.",
+          "lessonTitles": ["Conditional Statements", "Loops", "Functions"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+
+
+
+chain coach route
+
+
+req
+```json
+{
+  "question": "tell me abojt....",
+  "context": "all the content of the week in one string"
+}
+```
+res
+
+```json
+
+{
+  "answer": "the answer"
+}
+
+```
+
+create content
+
+```json
+{
+  "titles": ["Introduction to the Cell", "Cellular Respiration", "Photosynthesis"]
+}
+```
+
+
+```json
+
+{
+  "content": "The cell is the basic unit of life... [Generated content about the titles]" 
+}
+
+```
+
+create QA (optional)
