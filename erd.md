@@ -35,3 +35,9 @@ When a user creates a journey, the JSON payload might look like this:
       "status": "failure"
   }
   ```
+
+
+chain coach
+create content
+create QA (optional)
+create journy
