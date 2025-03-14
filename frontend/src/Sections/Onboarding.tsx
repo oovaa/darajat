@@ -50,10 +50,8 @@ const Onboarding: React.FC = () => {
         }
     };
 
-
-
     return (
-        <div id='onboarding' className='p-20 bg-white'>
+        <div id='onboarding' className='p-8 lg:p-20 bg-white'>
             <h1 className='font-bold text-2xl lg:text-3xl text-center mb-14'>Let`s bring you back!</h1>
             <div className="container bg-[#FCF1CC] grid grid-cols-1 lg:grid-cols-2 justify-items-center items-center rounded-2xl shadow-md shadow-gray-300 p-7">
                 <div className="form-wrapper text-center lg:text-left w-full">
@@ -90,7 +88,7 @@ const Onboarding: React.FC = () => {
                         </div>
                         <div className="paces">
                             <h3 className='my-6'>What is your learning pace?</h3>
-                            <div className="flex gap-3 my-4">
+                            <div className="flex flex-wrap gap-3 my-4">
                                 <button type="button" className={`flex-1 border rounded-md p-3 flex flex-col items-center hover:bg-gray-100 ${selectedPace === "Relaxed" ? "bg-gray-200 border-blue-500" : ""}`} onClick={() => handlePaceSelect("Relaxed")}>
                                     🐢 <span>Relaxed</span> <span className="text-xs">1-2 hours / day</span>
                                 </button>
