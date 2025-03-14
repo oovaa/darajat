@@ -3,7 +3,7 @@ import LandingImg from '../assets/landing-img.png';
 import { MainLink } from '../Container';
 const Landing: React.FC = () => {
     return (
-        <div id='landing' className='bg-[#FCF1CC] py-7 mt-12 h-[95vh]'>
+        <div id='landing' className='bg-[#FCF1CC] py-7 mt-12 min-h-[95vh]'>
             <div className="container w-[90%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3 justify-items-center items-center">
                 <div className="intro-text my-8 lg:mb-0 text-center lg:text-left">
                     <h1 className='relative text-[48px] after:absolute after:bottom-4 after:content-[""] after:w-2 after:h-2 after:rounded-full after:bg-orange-400'>Reclaim Your <span className='font-bold'>Education </span>

@@ -1,14 +1,56 @@
 import React, { useState } from 'react';
 import onboardingImg from '../assets/onboarding-img.png';
 import downImg from '../assets/select-dwon.svg';
+import axios from 'axios';
 
 const Onboarding: React.FC = () => {
     type paceValue = 'Relaxed' | 'Standard' | 'Accelerated';
     const [selectedPace, setSelectedPace] = useState("");
 
+    const [formData, setFormData] = useState({
+        firstName: '',
+        age: '',
+        lastCompletedGrade: '',
+        yearsOutOfSchool: '',
+        learningPace: ''
+    });
+    const [error, setError] = useState<string | null>('')
+
     const handlePaceSelect = (pace: paceValue) => {
-        setSelectedPace(pace);
+        setSelectedPace(pace)
+        setFormData({ ...formData, learningPace: pace });
     };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('https://your-backend-api.com/onboarding', formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                console.log('Form submitted successfully:', response.data);
+            } else {
+                console.error('Form submission failed:', response);
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            setError(`An error occurred. Please check your connection and try again.`);
+            
+        }
+    };
+
+
 
     return (
         <div id='onboarding' className='p-20 bg-white'>
@@ -18,17 +60,16 @@ const Onboarding: React.FC = () => {
                     <div className="form-header">
                         <h1 className='text-4xl font-bold mb-5'>Onboarding</h1>
                     </div>
-                    <form action="" onSubmit={(e) => e.preventDefault()}>
+                    <form action="" onSubmit={handleSubmit}>
                         <div className="input-wrapper my-1">
-                            <input type="text" placeholder='First Name' required className='w-full py-2 px-2 border-b-1 border-b-gray-400 placeholder:text-black transition-all' />
+                            <input type="text" name='firstName' className='w-full py-2 px-2 border-b-1 border-b-gray-400 placeholder:text-black transition-all' placeholder='First Name' required value={formData.firstName} onChange={handleChange} />
                         </div>
                         <div className="input-wrapper my-1">
-                            <input type="number" placeholder='Age' required className='w-full py-2 px-2 border-b-1 border-b-gray-400 placeholder:text-black transition-all' />
+                            <input type="number" name='age' className='w-full py-2 px-2 border-b-1 border-b-gray-400 placeholder:text-black transition-all' placeholder='Age' required value={formData.age} onChange={handleChange} />
                         </div>
-
                         <div className="input-wrapper my-1 relative w-full">
-                            <select className="w-full text-[16px] py-2 px-2 bg-transparent outline-none border-b border-gray-400 appearance-none" >
-                                <option value="" disabled selected>Last compelted grade</option>
+                            <select name='lastCompletedGrade' className="w-full text-[16px] py-2 px-2 bg-transparent outline-none border-b border-gray-400 appearance-none" value={formData.lastCompletedGrade} onChange={handleChange}>
+                                <option value="" disabled defaultValue={'Last compelted grade'}>Last compelted grade</option>
                                 <option value="9">9</option>
                                 <option value="10">10</option>
                                 <option value="11">11</option>
@@ -37,8 +78,8 @@ const Onboarding: React.FC = () => {
                             <img src={downImg} alt="" className='w-4 absolute right-2 top-1/2 -translate-y-1/2 rotate-180' />
                         </div>
                         <div className="input-wrapper my-1 relative w-full ">
-                            <select className="w-full text-[16px] py-2 px-2 bg-transparent outline-none border-b border-gray-400 appearance-none" >
-                                <option value="" disabled selected>Years out of school</option>
+                            <select name='yearsOutOfSchool' className="w-full text-[16px] py-2 px-2 bg-transparent outline-none border-b border-gray-400 appearance-none" value={formData.yearsOutOfSchool} onChange={handleChange}>
+                                <option value="" disabled defaultValue={'Years out of school'}>Years out of school</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -50,33 +91,20 @@ const Onboarding: React.FC = () => {
                         <div className="paces">
                             <h3 className='my-6'>What is your learning pace?</h3>
                             <div className="flex gap-3 my-4">
-                                <button
-                                    type="button"
-                                    className={`flex-1 border rounded-md p-3 flex flex-col items-center hover:bg-gray-100 
-                            ${selectedPace === "Relaxed" ? "bg-gray-200 border-blue-500" : ""}`}
-                                    onClick={() => handlePaceSelect("Relaxed")}
-                                >
+                                <button type="button" className={`flex-1 border rounded-md p-3 flex flex-col items-center hover:bg-gray-100 ${selectedPace === "Relaxed" ? "bg-gray-200 border-blue-500" : ""}`} onClick={() => handlePaceSelect("Relaxed")}>
                                     🐢 <span>Relaxed</span> <span className="text-xs">1-2 hours / day</span>
                                 </button>
-                                <button
-                                    type="button"
-                                    className={`flex-1 border rounded-md p-3 flex flex-col items-center hover:bg-gray-100 
-                            ${selectedPace === "Standard" ? "bg-gray-200 border-blue-500" : ""}`}
-                                    onClick={() => handlePaceSelect("Standard")}
-                                >
+                                <button type="button" className={`flex-1 border rounded-md p-3 flex flex-col items-center hover:bg-gray-100 ${selectedPace === "Standard" ? "bg-gray-200 border-blue-500" : ""}`} onClick={() => handlePaceSelect("Standard")}>
                                     🚶‍♂️ <span>Standard</span> <span className="text-xs">3-4 hours / day</span>
                                 </button>
-                                <button
-                                    type="button"
-                                    className={`flex-1 border rounded-md p-3 flex flex-col items-center hover:bg-gray-100 
-                            ${selectedPace === "Accelerated" ? "bg-gray-200 border-blue-500" : ""}`}
-                                    onClick={() => handlePaceSelect("Accelerated")}
-                                >
+                                <button type="button" className={`flex-1 border rounded-md p-3 flex flex-col items-center hover:bg-gray-100 ${selectedPace === "Accelerated" ? "bg-gray-200 border-blue-500" : ""}`} onClick={() => handlePaceSelect("Accelerated")}>
                                     🏃‍♂️ <span>Accelerated</span> <span className="text-xs">5-6 hours / day</span>
                                 </button>
                             </div>
                         </div>
                         <button type="submit" className='bg-orange-400 text-white font-bold rounded-3xl px-12 py-2 hover:-translate-y-1 transition-all'>Start →</button>
+                    
+                    <span className={`block my-2.5 scale-0 transition-all ${error? 'scale-100':''}`}>{error}</span>
                     </form>
                 </div>
                 <div className="img-wrapper mt-8 lg:mt-0">
