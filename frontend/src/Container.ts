@@ -4,6 +4,7 @@
 // Pages
 export { default as HomePage } from './Pages/HomePage';
 export { default as Onboarding } from './Pages/Onboarding';
+export { default as MyLearning } from './Pages/MyLearning';
 
 // Sections
 export { default as Header } from './Sections/Header';
