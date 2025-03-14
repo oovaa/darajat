@@ -1,15 +1,15 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css';
-import {HomePage } from './Container';
+import { HomePage, Onboarding } from './Container';
 
 const App = () => {
   return (
     <>
-    <BrowserRouter>
-    <Routes>
-      <Route path='/' element={<HomePage/>}/>
-    </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='onboarding' element={<Onboarding />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

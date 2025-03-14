@@ -9,7 +9,7 @@ const Landing: React.FC = () => {
                     <h1 className='relative text-[48px] after:absolute after:bottom-4 after:content-[""] after:w-2 after:h-2 after:rounded-full after:bg-orange-400'>Reclaim Your <span className='font-bold'>Education </span>
                         One <span className='font-bold'>Step</span> at a Time</h1>
                     <p className='w-[70%] mx-auto lg:mx-0'>A personalized AI-powered school designed for displaced students to catch up and stay on track.</p>
-                    <MainLink title='Get Start' className='bg-orange-400 text-white mt-6' route='#' />
+                    <MainLink title='Get Start' className='bg-orange-400 text-white mt-6' route='onboarding' />
                 </div>
                 <div className="img-wrapper flex justify-center">
                     <img src={LandingImg} alt="" className='w-[80%] animate-pulse' loading='lazy' />
