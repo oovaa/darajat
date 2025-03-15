@@ -16,9 +16,6 @@ interface Lesson {
 }
 
 const MyLearning: React.FC = () => {
-    // green note color : #AFE9D9
-    // red note color : #FFA7C4
-
     const [lessons, setLessons] = useState<Lesson[] | any[]>([]);
     const [expanded, setExpanded] = useState<number | null>(null);
 
