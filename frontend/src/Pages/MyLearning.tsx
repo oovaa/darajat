@@ -62,7 +62,7 @@ const MyLearning: React.FC = () => {
                     </div>
                     <div className="week-lessons">
                         {lessons.map((lesson) => (
-                            <div key={lesson.id} className="border my-2 p-2">
+                            <div key={lesson.id} className="border my-2 p-1 ">
                                 <div className='flex justify-center items-center '>
                                     <CircleCheckBig size={'20px'} className={`mr-2 ${isLessonComplete(lesson) ? 'text-orange-400' : 'text-black'}`} />
                                     <button
