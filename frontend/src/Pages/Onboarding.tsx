@@ -105,7 +105,6 @@ const Onboarding: React.FC = () => {
                                     </div>
                                 </div>
                                 <button type="submit" className='bg-orange-400 text-white font-bold rounded-3xl px-12 py-2 hover:-translate-y-1 transition-all'>Start →</button>
-
                                 <span className={`block my-2.5 scale-0 transition-all ${error ? 'scale-100' : ''}`}>{error}</span>
                             </form>
                         </div>
