@@ -15,7 +15,7 @@ When a user creates a journey, the JSON payload might look like this:
 ```json
 {
     "hours_per_day": 4,
-    "last_education_year": 2020,
+    "last_education_year": "G1",
     "years_missed": 2
 }
 ```
@@ -37,15 +37,30 @@ When a user creates a journey, the JSON payload might look like this:
   ```
 
 
-create journy
+create-journy
 
+req
 ```json
 {
   "readingHoursPerDay": 2,
-  "titles": ["Python for Beginners", "Data Science with Pandas", "Machine Learning with Scikit-learn"]
+  "journey": [
+    {
+      "subject":"Math",
+      "lessons":["l1","l2"]
+    },
+    {
+      "subject":"Physics",
+      "lessons":["l1","l2"]
+    },
+    {
+      "subject":"Science",
+      "lessons":["l1","l2"]
+    }
+  ]
 }
 ```
 
+res
 ```json
 {
   "months": [
@@ -54,7 +69,7 @@ create journy
       "weeks": [
         {
           "week": 1,
-          "title": "Introduction to Python",
+          "subject": "Introduction to Python",
           "description": "Learn the basic syntax and data structures of Python.",
           "lessonTitles": ["Variables and Data Types", "Basic Operators", "Input and Output"]
         },
@@ -70,44 +85,47 @@ create journy
 }
 ```
 
-
-
-
-chain coach route
-
+coach 
 
 req
 ```json
 {
-  "question": "tell me abojt....",
+  "question": "tell me about....",
   "context": "all the content of the week in one string"
 }
 ```
-res
 
+res
 ```json
 
 {
   "answer": "the answer"
 }
-
 ```
 
-create content
+create-content
 
 ```json
 {
   "titles": ["Introduction to the Cell", "Cellular Respiration", "Photosynthesis"]
 }
 ```
-
-
-```json
-
-{
-  "content": "The cell is the basic unit of life... [Generated content about the titles]" 
-}
-
+ 
+``` json
+  {
+    "summary":"str",
+    "ytvidoes":["link1","link2"],
+    "quiz":[
+      {
+        "question":"1+1=?",
+        "answers":["2","4","1","7"],
+        "right":0
+      },
+      {
+        "question":"in x^2 = 1 what is the value of x?",
+        "answers":["2","4","1","7"],
+        "right":3
+      }
+    ]
+  }
 ```
-
-create QA (optional)
