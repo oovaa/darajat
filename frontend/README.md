@@ -1,1 +1,0 @@
-darajat, ui part.
