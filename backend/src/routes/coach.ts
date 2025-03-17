@@ -3,7 +3,7 @@ import { coachAnswer } from '../../lib/coachChain'
 
 export const coachRouter = Router()
 
-//
+// @ts-ignore
 coachRouter.post('/coach', async (req: Request, res: Response) => {
   try {
     if (!req.body.information || !req.body.question) {
