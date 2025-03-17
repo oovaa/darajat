@@ -3,4 +3,4 @@ import { coachRouter } from './coach'
 
 export const router = Router()
 
-router.use('/api', coachRouter)
+router.use(coachRouter)
