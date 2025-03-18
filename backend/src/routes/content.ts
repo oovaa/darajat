@@ -3,7 +3,8 @@ import { Router } from "express";
 import { contentAnswer } from "../../lib/contentGenerator";
 
 const contentRouter = Router();
-const DataBaseURL = "https://jsonplaceholder.typicode.com/search"
+const DataBaseURL = Bun.env.DATABASE_URL
+
 
 async function postData(data:string) {
 
