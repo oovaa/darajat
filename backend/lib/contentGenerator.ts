@@ -1,7 +1,15 @@
 import { JsonOutputParser } from '@langchain/core/output_parsers'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { llm } from './llm'
-import type { ReadingMaterial,Video,VideoMaterial,Question,QuizContent,Quiz, Content } from '../src/types/contentResponse'
+import type {
+  ReadingMaterial,
+  Video,
+  VideoMaterial,
+  Question,
+  QuizContent,
+  Quiz,
+  Content,
+} from '../src/types/contentResponse'
 import { RunnableSequence } from '@langchain/core/runnables'
 
 // Initialize the OpenAI model
@@ -33,7 +41,7 @@ const prompt = ChatPromptTemplate.fromTemplate(plannerTemplate)
 const formatInstructions = parser.getFormatInstructions()
 
 const partialedPrompt = await prompt.partial({
-    format_instructions: formatInstructions,
+  format_instructions: formatInstructions,
 })
 
 // Create the chain
@@ -46,33 +54,24 @@ const chain = RunnableSequence.from([
 ])
 
 // Function to invoke the chain
-export async function contentAnswer(lessons:string[], material:string) {
+export async function contentAnswer(lessons: string[], material: string) {
   const response = await chain.invoke({
     lessons,
-    material
+    material,
   })
 
   console.log(response)
   return response
 }
 
-// // Example usage
+// Example test in main
 // async function main() {
-//   const hoursPerDay = 4
-//   const titles = ['Mathematics', 'Physics', 'Chemistry']
-//   const lastYear = 10
-//   const yearsMissed = 2
+//   const fakeLessons = ['Algebra', 'Trigonometry', 'Calculus']
+//   const fakeMaterial =
+//     'Comprehensive notes, practice problems, and video explanations.'
 
-//   const studyPlan = await plannerAnswer(
-//     hoursPerDay,
-//     titles,
-//     lastYear,
-//     yearsMissed
-//   )
-//   console.log('Generated Study Plan:', JSON.stringify(studyPlan, null, 2))
+//   const studyContent = await contentAnswer(fakeLessons, fakeMaterial)
+//   console.log('Generated Study Content:', JSON.stringify(studyContent, null, 2))
 // }
 
-// // Run the example
-// main().catch((error) => {
-//   console.error('Error during test execution:', error)
-// })
+// main()
