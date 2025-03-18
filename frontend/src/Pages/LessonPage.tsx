@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logoHead from '../assets/darajat-logo.png';
-import { QuestionContent, VideoContent, ReadingContent, FadeIn } from '../Container';
+import { QuestionContent, VideoContent, ReadingContent, FadeIn, MainLink } from '../Container';
 import { QuestionProps } from '../Components/QuestionContent';
 
 
@@ -97,6 +97,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
     const currentSubject = content[currentSubjectIndex];
     const currentMaterial = currentSubject.material[currentMaterialIndex];
 
+
     // calculating total progress for current subject
 
     const totalProgress = currentSubject.material.reduce(
@@ -105,8 +106,9 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
     // for questions
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
 
-
     const [noPreviousMessage, setNoPreviousMessage] = useState(false);
+    // lesson compelted functionlity 
+    const [lessonCompleted, setLessonCompleted] = useState(false);
 
     const handlePrevious = () => {
         if (currentMaterialIndex > 0) {
@@ -120,6 +122,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
             setNoPreviousMessage(true);
             setTimeout(() => setNoPreviousMessage(false), 2000);
         }
+        setLessonCompleted(false)
     };
 
     const handleNext = () => {
@@ -135,6 +138,9 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
         } else if (currentSubjectIndex < content.length - 1) {
             setCurrentSubjectIndex(prev => prev + 1);
             setCurrentMaterialIndex(0);
+        }
+        else {
+            setLessonCompleted(true);
         }
     };
 
@@ -154,7 +160,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
                 typeof currentMaterial.content === 'object' &&
                 'questions' in currentMaterial.content &&
                 Array.isArray(currentMaterial.content.questions) &&
-                currentMaterial.content.questions.every((q,index) => selectedOptions.hasOwnProperty(index))
+                currentMaterial.content.questions.every((q, index) => selectedOptions.hasOwnProperty(index))
             );
         }
         return true;
@@ -199,7 +205,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
                                             answer={q.answer}
                                             selectedOption={selectedOptions[index] ?? null}
                                             handleSelect={(optionIndex) => setSelectedOptions((prev) => ({ ...prev, [index]: optionIndex }))}
-                                            
+
                                         />
                                     </FadeIn>
                                 ))
@@ -249,6 +255,17 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
                     <p className='text-[9px] lg:text-sm px-3 lg:py-1'>Content of week 3 will not be unlocked until week 2 is <span className='font-bold'>80% completed.</span> Delays will cause automatic adjustments to the learning plan.</p>
                 </div>
             </div>
+
+            {/* this is the message appear when the user complete all lessons */}
+            {
+                lessonCompleted &&
+                <div className={`fixed top-0 left-0 w-full h-full bg-[rgba(33, 33, 33, 0.5)] backdrop-blur-md z-[98]`}></div>
+            }
+            <div className={`completion-message w-full h-full fixed top-0 left-0 text-xl flex justify-center items-center  z-[99] ${lessonCompleted ? 'scale-100' : 'scale-0'}`}>
+                <MainLink title='← Dashboard' route='/dashboard' className='bg-black! absolute top-3 left-3'/>
+                <h2 className='font-bold text-xl lg:text-3xl '>You completed all lessons for today <span className='inline-block animate-bounce'>🚀</span></h2>
+            </div>
+
         </div >
     )
 }
