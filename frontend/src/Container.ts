@@ -7,6 +7,7 @@ export { default as Onboarding } from './Pages/Onboarding';
 export { default as MyLearning } from './Pages/MyLearning';
 export { default as Dashboard } from './Pages/Dashboard';
 export { default as LearningPlan } from './Pages/LearningPlan';
+export { default as LessonPage } from './Pages/LessonPage';
 
 
 
