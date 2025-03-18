@@ -20,3 +20,6 @@ export { default as Navigation } from './Sections/Navigation';
 export { default as MainLink } from './Components/MainLink';
 export { default as GoUp } from './Components/GoUp';
 export { default as FadeIn } from './Components/FadeIn';
+export { default as VideoContent } from './Components/VideoContent';
+export { default as ReadingContent } from './Components/ReadingContent';
+export { default as QuestionContent } from './Components/QuestionContent';
