@@ -13,6 +13,7 @@ html {
     background-color: #ffff;
 }
 
+
 ::-webkit-scrollbar-thumb {
     border-radius: 30px;
     background-color: orange;
