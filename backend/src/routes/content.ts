@@ -3,11 +3,12 @@ import { Router } from "express";
 import { contentAnswer } from "../../lib/contentGenerator";
 
 const contentRouter = Router();
-
+const DataBaseURL = "https://jsonplaceholder.typicode.com/search"
 
 async function postData(data:string) {
+
     try {
-      const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {
+      const response = await axios.post('', {
         query:data
       });
       return response.data
