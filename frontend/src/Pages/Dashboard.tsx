@@ -1,12 +1,14 @@
 
 import Calendar from "../Components/Calander";
+import Streak from "../Components/Streak";
+import Lessons from "../Components/Lessons";
 import abstractChalk from '../assets/abstract-chalk-texture-brush.png';
 import logoHead from '../assets/darajat-logo.png';
 import dayjs from "dayjs";
 
 export default function Dashboard() {
   const today = dayjs().format("MMMM D")
-  // The content of the day will be summerized 
+
 
   return (
     <div className="flex justify-between">
@@ -30,15 +32,13 @@ export default function Dashboard() {
                         Start Today's Lesson
                     </div>
                 </div>
-                <div>
-
-                </div>
+                <Lessons />
 
             </div>
 
 
         </div>
-        <div>
+        <div className="flex flex-col">
             <div className="flex items-center justify-center">
                 <div className="flex">
                 <img src={logoHead} alt="logo" className='w-5' />
@@ -46,6 +46,7 @@ export default function Dashboard() {
                 </div>
             </div>
             <Calendar />
+            <Streak />
         </div>
 
     </div>

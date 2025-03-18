@@ -35,7 +35,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="max-w-[350px] max-h-[350px] p-5 rounded-lg">
+    <div className="max-w-[350px] p-5 rounded-lg">
       <div className="w-full flex items-center justify-between mb-6 p-2 border-b border-gray-300">
             <ChevronLeft
                 className="w-5 h-5 cursor-pointer"

@@ -55,7 +55,7 @@ const Onboarding: React.FC = () => {
         <>
             <Header />
             <FadeIn>
-                <div id='onboarding' className='p-8 lg:p-20 mt-12 lg:mt-4 min-h-[95vh] bg-[#FCF1CC]'>
+                <div id='onboarding' className='p-8 lg:pt-7 lg:px-20  mt-12 lg:mt-4 min-h-[95vh] bg-[#FCF1CC]'>
                     <div className="container relative lg:w-[90%] mx-auto bg-white grid grid-cols-1 lg:grid-cols-2 justify-items-center items-center rounded-2xl shadow-md shadow-gray-300 p-7 mt-8 overflow-hidden">
                         <MainLink title='← Home' route='/' className='absolute left-0 -top-2 rounded-l-none' />
                         <div className="form-wrapper text-center lg:text-left w-full">
