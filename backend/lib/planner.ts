@@ -71,7 +71,7 @@ async function createChain() {
         input.hoursPerDay,
         input.titles,
         input.lastYear,
-        input.yearsMissed,
+        input.yearsMissed
       ),
     model,
     parser,
@@ -96,23 +96,23 @@ export async function plannerAnswer(
   return response
 }
 
-// Example usage
-async function main() {
-  const hoursPerDay = 4
-  const titles = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History']
-  const lastYear = 10
-  const yearsMissed = 2
+// // Example usage
+// async function main() {
+//   const hoursPerDay = 4
+//   const titles = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History']
+//   const lastYear = 10
+//   const yearsMissed = 2
 
-  const studyPlan = await plannerAnswer(
-    hoursPerDay,
-    titles,
-    lastYear,
-    yearsMissed
-  )
-  console.log(JSON.stringify(studyPlan, null, 2))
-}
+//   const studyPlan = await plannerAnswer(
+//     hoursPerDay,
+//     titles,
+//     lastYear,
+//     yearsMissed
+//   )
+//   console.log(JSON.stringify(studyPlan, null, 2))
+// }
 
-// Run the example
-main().catch((error) => {
-  console.error('Error during test execution:', error)
-})
+// // Run the example
+// main().catch((error) => {
+//   console.error('Error during test execution:', error)
+// })
