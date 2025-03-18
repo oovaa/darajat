@@ -3,11 +3,11 @@ import { plannerAnswer } from '../../lib/planner'
 
 export const planRouter = Router()
 
+// @ts-ignore
 planRouter.post('/plan', async (req, res) => {
   // Extract and validate input data
   const { hoursPerDay, titles, lastYear, yearsMissed } = req.body
 
-  // Validate required fields
   if (
     hoursPerDay === undefined ||
     !titles ||
@@ -49,10 +49,10 @@ planRouter.post('/plan', async (req, res) => {
     )
 
     // Parse the AI's response (which is a string) into a JSON object
-    const parsedAnswer = result.answer
+    const parsedAnswer = result
 
     // Return the parsed JSON object
-    res.status(200).json({ answer: parsedAnswer })
+    res.status(200).json(parsedAnswer)
   } catch (error) {
     console.error('Error generating study plan:', error)
 
@@ -64,8 +64,9 @@ planRouter.post('/plan', async (req, res) => {
     }
 
     // Generic error response
-    res
-      .status(500)
-      .json({ error: 'Failed to generate study plan', details: error.message })
+    res.status(500).json({
+      error: 'Failed to generate study plan',
+      details: (error as Error).message,
+    })
   }
 })
