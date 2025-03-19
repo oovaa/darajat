@@ -15,4 +15,3 @@ export function calcSyllabus(lastYear:number,yearsMissed:number){
     return text
 }
 
-calcSyllabus(10,1)
