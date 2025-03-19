@@ -20,6 +20,8 @@ function generatePrompt(hoursPerDay: any, lastYear: any, yearsMissed: any) {
   ## Task:
   Create a structured study plan covering the above subjects, considering the user's background. The plan must be formatted as valid JSON and follow this schema:
   
+  ## USE THE CURRENT DATE TO REPRESENT MONTHS AND DAYS
+
   {
     "plan": [
       {
