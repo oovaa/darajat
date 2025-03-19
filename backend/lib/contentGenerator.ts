@@ -15,8 +15,6 @@ import { RunnableSequence } from '@langchain/core/runnables'
 // Initialize the OpenAI model
 const model = llm
 
-// Set up the parser with the Content type
-const parser = new JsonOutputParser<Content>()
 
 // Define the prompt template
 function generatePrompt(lessons:string[],material:string) {
@@ -155,16 +153,6 @@ Respond in a valid JSON format only, nothing else.
 `
 return genContentTemplate
 }
-
-// Create the prompt template
-// const prompt = ChatPromptTemplate.fromTemplate(generatePrompt())
-
-// Add format instructions to the prompt
-const formatInstructions = parser.getFormatInstructions()
-
-// const partialedPrompt = await prompt.partial({
-//   format_instructions: formatInstructions,
-// })
 
 // Create the chain
 const chain = RunnableSequence.from([

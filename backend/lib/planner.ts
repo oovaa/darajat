@@ -8,21 +8,17 @@ import {calcSyllabus} from './syllabus'
 // Initialize the OpenAI model
 const model = llm
 
-// Set up the parser with the StudyPlan type
-// const parser = new JsonOutputParser<StudyPlan>()
 
 
 
 // Function to generate the prompt template string
 function generatePrompt(
   hoursPerDay: any,
-  titles: any,
   lastYear: any,
   yearsMissed: any,
 ) {
   return `## Context:
   - Hours per day available: ${hoursPerDay}
-  - Subjects to cover: ${titles}
   - Last year completed in education: ${lastYear}
   - Years missed: ${yearsMissed}
   - syllabus:${syllabus} this is an array that contains the years and subjects that the user may study, you can know what to select from this list with
@@ -74,10 +70,8 @@ async function createChain() {
     async (input) =>
       generatePrompt(
         input.hoursPerDay,
-        input.titles,
         input.lastYear,
         input.yearsMissed,
-        
       ),
     model,
   ])
@@ -101,23 +95,23 @@ export async function plannerAnswer(
   return response.content
 }
 
-// // Example usage
-// async function main() {
-//   const hoursPerDay = 4
-//   const titles = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History']
-//   const lastYear = 10
-//   const yearsMissed = 2
+// Example usage
+async function main() {
+  const hoursPerDay = 4
+  const titles = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History']
+  const lastYear = 10
+  const yearsMissed = 2
 
-//   const studyPlan = await plannerAnswer(
-//     hoursPerDay,
-//     titles,
-//     lastYear,
-//     yearsMissed
-//   )
-//   console.log(studyPlan)
-// }
+  const studyPlan = await plannerAnswer(
+    hoursPerDay,
+    titles,
+    lastYear,
+    yearsMissed
+  )
+  console.log(studyPlan)
+}
 
-// // Run the example
-// main().catch((error) => {
-//   console.error('Error during test execution:', error)
-// })
+// Run the example
+main().catch((error) => {
+  console.error('Error during test execution:', error)
+})
