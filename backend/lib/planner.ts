@@ -13,8 +13,7 @@ function generatePrompt(hoursPerDay: any, lastYear: any, yearsMissed: any) {
   - Years missed: ${yearsMissed}
   - syllabus:${syllabus} this is an array that contains the years and subjects that the user may study, you can know what to select from this list with
     the last year and the years missed for example if the last year studied is 10 and the years missed are 2 you must select the years 11 and 12 and so on so forth 
-
-  ## Task:
+    ## Task:
   Create a structured study plan covering the above subjects, considering the user's background. The plan must be formatted as valid JSON and follow this schema:
   
   ## USE THE CURRENT DATE TO REPRESENT MONTHS AND DAYS today is march 2025
@@ -95,7 +94,6 @@ async function main() {
   )
   console.log(studyPlan)
 }
-
 // Run the example
 main().catch((error) => {
   console.error('Error during test execution:', error)
