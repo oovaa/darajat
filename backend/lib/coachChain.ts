@@ -10,7 +10,7 @@ const coach = `
 {question}
 
 ## Task:
-Answer the provided question based on the given information include examples if needed
+Answer the provided question based on the given information
 
 ## Response:
 `
