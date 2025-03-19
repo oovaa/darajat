@@ -62,7 +62,7 @@ async function createChain() {
   const chain = RunnableSequence.from([
     async (input) =>
       generatePrompt(input.hoursPerDay, input.lastYear, input.yearsMissed),
-    
+
     model,
   ])
   return chain
@@ -82,7 +82,8 @@ export async function plannerAnswer(
     lastYear,
     yearsMissed,
   })
-  return response.content
+
+  return JSON.parse(response.content)
 }
 
 // // Example usage
