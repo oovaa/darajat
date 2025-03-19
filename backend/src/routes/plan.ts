@@ -41,12 +41,7 @@ planRouter.post('/plan', async (req, res) => {
 
   try {
     // Call the planner function
-    const result = await plannerAnswer(
-      hoursPerDay,
-      titles,
-      lastYear,
-      yearsMissed
-    )
+    const result = await plannerAnswer(hoursPerDay, lastYear, yearsMissed)
 
     // Parse the AI's response (which is a string) into a JSON object
     const parsedAnswer = result

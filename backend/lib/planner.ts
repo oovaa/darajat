@@ -78,23 +78,24 @@ export async function plannerAnswer(
     yearsMissed,
   })
 
-  return JSON.parse(response.content)
+  return JSON.parse(String(response.content))
 }
 
-// Example usage
-async function main() {
-  const hoursPerDay = 4
-  const lastYear = 10
-  const yearsMissed = 2
+// // Example usage
+// async function main() {
+//   const hoursPerDay = 4
+//   const lastYear = 10
+//   const yearsMissed = 2
 
-  const studyPlan = await plannerAnswer(
-    hoursPerDay,
-    lastYear,
-    yearsMissed
-  )
-  console.log(studyPlan)
-}
-// Run the example
-main().catch((error) => {
-  console.error('Error during test execution:', error)
-})
+//   const studyPlan = await plannerAnswer(
+//     hoursPerDay,
+//     lastYear,
+//     yearsMissed
+//   )
+//   console.log(studyPlan)
+// }
+
+// // Run the example
+// main().catch((error) => {
+//   console.error('Error during test execution:', error)
+// })
