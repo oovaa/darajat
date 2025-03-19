@@ -3,13 +3,13 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { llm } from './llm'
 import type { StudyPlan } from '../src/types/plannerResponse'
 import { RunnableSequence } from '@langchain/core/runnables'
-
+import { syllabus } from './syllabus'
+import {calcSyllabus} from './syllabus'
 // Initialize the OpenAI model
 const model = llm
 
 // Set up the parser with the StudyPlan type
-const parser = new JsonOutputParser<StudyPlan>()
-
+// const parser = new JsonOutputParser<StudyPlan>()
 
 
 
@@ -18,17 +18,19 @@ function generatePrompt(
   hoursPerDay: any,
   titles: any,
   lastYear: any,
-  yearsMissed: any
+  yearsMissed: any,
 ) {
   return `## Context:
   - Hours per day available: ${hoursPerDay}
   - Subjects to cover: ${titles}
   - Last year completed in education: ${lastYear}
   - Years missed: ${yearsMissed}
+  - syllabus:${syllabus} this is an array that contains the years and subjects that the user may study, you can know what to select from this list with
+    the last year and the years missed for example if the last year studied is 10 and the years missed are 2 you must select the years 11 and 12 and so on so forth 
 
   ## Task:
   Create a structured study plan covering the above subjects, considering the user's background. The plan must be formatted as valid JSON and follow this schema:
-
+  
   {
     "plan": [
       {
@@ -74,10 +76,10 @@ async function createChain() {
         input.hoursPerDay,
         input.titles,
         input.lastYear,
-        input.yearsMissed
+        input.yearsMissed,
+        
       ),
     model,
-    parser,
   ])
   return chain
 }
@@ -96,7 +98,7 @@ export async function plannerAnswer(
     lastYear,
     yearsMissed,
   })
-  return response
+  return response.content
 }
 
 // // Example usage
@@ -112,7 +114,7 @@ export async function plannerAnswer(
 //     lastYear,
 //     yearsMissed
 //   )
-//   console.log(JSON.stringify(studyPlan, null, 2))
+//   console.log(studyPlan)
 // }
 
 // // Run the example
