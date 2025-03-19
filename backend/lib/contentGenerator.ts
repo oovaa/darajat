@@ -15,10 +15,9 @@ import { RunnableSequence } from '@langchain/core/runnables'
 // Initialize the OpenAI model
 const model = llm
 
-
 // Define the prompt template
-function generatePrompt(lessons:string[],material:string) {
-const genContentTemplate = `
+function generatePrompt(lessons: string[], material: string) {
+  const genContentTemplate = `
 ## Context:
 - lessons:${lessons}
 - material:${material}
@@ -151,15 +150,14 @@ const genContentTemplate = `
 Respond in a valid JSON format only, nothing else.
 ## Response:
 `
-return genContentTemplate
+  return genContentTemplate
 }
 
 // Create the chain
 const chain = RunnableSequence.from([
-    async (input) =>
-      generatePrompt(input.lessons, input.material),
-    model,
-  ])
+  async (input) => generatePrompt(input.lessons, input.material),
+  model,
+])
 // Function to invoke the chain
 export async function contentAnswer(lessons: string[], material: string) {
   const response = await chain.invoke({
@@ -167,18 +165,17 @@ export async function contentAnswer(lessons: string[], material: string) {
     material,
   })
 
-  console.log(response)
   return response.content
 }
 
 // Example test in main
-// async function main() {
-//   const fakeLessons = ['Algebra', 'Trigonometry', 'Calculus']
-//   const fakeMaterial =
-//     'Comprehensive notes, practice problems, and video explanations.'
+async function main() {
+  const fakeLessons = ['Algebra', 'Trigonometry', 'Calculus']
+  const fakeMaterial =
+    'Comprehensive notes, practice problems, and video explanations.'
 
-//   const studyContent = await contentAnswer(fakeLessons, fakeMaterial)
-//   console.log(studyContent)
-// }
+  const studyContent = await contentAnswer(fakeLessons, fakeMaterial)
+  console.log(studyContent)
+}
 
-// main()
+main()

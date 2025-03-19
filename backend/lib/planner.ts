@@ -4,19 +4,12 @@ import { llm } from './llm'
 import type { StudyPlan } from '../src/types/plannerResponse'
 import { RunnableSequence } from '@langchain/core/runnables'
 import { syllabus } from './syllabus'
-import {calcSyllabus} from './syllabus'
+import { calcSyllabus } from './syllabus'
 // Initialize the OpenAI model
 const model = llm
 
-
-
-
 // Function to generate the prompt template string
-function generatePrompt(
-  hoursPerDay: any,
-  lastYear: any,
-  yearsMissed: any,
-) {
+function generatePrompt(hoursPerDay: any, lastYear: any, yearsMissed: any) {
   return `## Context:
   - Hours per day available: ${hoursPerDay}
   - Last year completed in education: ${lastYear}
@@ -68,11 +61,8 @@ async function createChain() {
   // const prompt = ChatPromptTemplate.fromTemplate('') // Empty template to use with string literals
   const chain = RunnableSequence.from([
     async (input) =>
-      generatePrompt(
-        input.hoursPerDay,
-        input.lastYear,
-        input.yearsMissed,
-      ),
+      generatePrompt(input.hoursPerDay, input.lastYear, input.yearsMissed),
+    
     model,
   ])
   return chain
@@ -95,23 +85,23 @@ export async function plannerAnswer(
   return response.content
 }
 
-// Example usage
-async function main() {
-  const hoursPerDay = 4
-  const titles = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History']
-  const lastYear = 10
-  const yearsMissed = 2
+// // Example usage
+// async function main() {
+//   const hoursPerDay = 4
+//   const titles = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History']
+//   const lastYear = 10
+//   const yearsMissed = 2
 
-  const studyPlan = await plannerAnswer(
-    hoursPerDay,
-    titles,
-    lastYear,
-    yearsMissed
-  )
-  console.log(studyPlan)
-}
+//   const studyPlan = await plannerAnswer(
+//     hoursPerDay,
+//     titles,
+//     lastYear,
+//     yearsMissed
+//   )
+//   console.log(studyPlan)
+// }
 
-// Run the example
-main().catch((error) => {
-  console.error('Error during test execution:', error)
-})
+// // Run the example
+// main().catch((error) => {
+//   console.error('Error during test execution:', error)
+// })
