@@ -7,6 +7,7 @@ const model = llm
 // Function to generate the prompt template string
 function generatePrompt(hoursPerDay: any, lastYear: any, yearsMissed: any) {
   return `## Context:
+  -date:${Date.now()}
   - Hours per day available: ${hoursPerDay}
   - Last year completed in education: ${lastYear}
   - Years missed: ${yearsMissed}
@@ -68,14 +69,12 @@ async function createChain() {
 // Function to invoke the chain
 export async function plannerAnswer(
   hoursPerDay: number,
-  titles: any[],
   lastYear: number,
   yearsMissed: number
 ) {
   const chain = await createChain()
   const response = await chain.invoke({
     hoursPerDay,
-    titles: titles.join(', '),
     lastYear,
     yearsMissed,
   })
@@ -83,23 +82,21 @@ export async function plannerAnswer(
   return JSON.parse(response.content)
 }
 
-// // Example usage
-// async function main() {
-//   const hoursPerDay = 4
-//   const titles = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History']
-//   const lastYear = 10
-//   const yearsMissed = 2
+// Example usage
+async function main() {
+  const hoursPerDay = 4
+  const lastYear = 10
+  const yearsMissed = 2
 
-//   const studyPlan = await plannerAnswer(
-//     hoursPerDay,
-//     titles,
-//     lastYear,
-//     yearsMissed
-//   )
-//   console.log(studyPlan)
-// }
+  const studyPlan = await plannerAnswer(
+    hoursPerDay,
+    lastYear,
+    yearsMissed
+  )
+  console.log(studyPlan)
+}
 
-// // Run the example
-// main().catch((error) => {
-//   console.error('Error during test execution:', error)
-// })
+// Run the example
+main().catch((error) => {
+  console.error('Error during test execution:', error)
+})

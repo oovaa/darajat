@@ -1,15 +1,7 @@
 import { JsonOutputParser } from '@langchain/core/output_parsers'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { llm } from './llm'
-import type {
-  ReadingMaterial,
-  Video,
-  VideoMaterial,
-  Question,
-  QuizContent,
-  Quiz,
-  Content,
-} from '../src/types/contentResponse'
+import { search } from './material'
 import { RunnableSequence } from '@langchain/core/runnables'
 
 // Initialize the OpenAI model
@@ -21,11 +13,9 @@ function generatePrompt(lessons: string[], material: string) {
 ## Context:
 - lessons:${lessons}
 - material:${material}
-- 
-
 
 ## Task:
-  create a studying material for the lessons and the material provided and return it in the following json format, return the json and the json only
+  create a studying material for the lessons and the material provided and return it in the following json format
   make sure the right answers of the quiz is in a random index in the array of answer, this is a must
   schema example:{
   "date": "2025-03-16",
@@ -36,15 +26,15 @@ function generatePrompt(lessons: string[], material: string) {
       "material": [
         {
           "type": "read",
-          "title": "Reading - Functions - Chapter 2",
-          "content": "URL or text content here"
+          "title": "the title of the reading material",
+          "content": "summarize the material above in 200-300 words"
         },
         {
           "type": "video",
           "content": [
             {
-              "title": "Understanding Kinematics",
-              "url": "https://example.com/video-kinematics"
+              "title": "the title of the video IT MUST BE A YOUTUBE VIDEO",
+              "url": "the url of the video"
             }
           ]
         },
@@ -54,23 +44,10 @@ function generatePrompt(lessons: string[], material: string) {
             "type": "mcqs",
             "questions": [
               {
-                "question": "What is the formula for velocity?",
-                "options": [
-                  "v = d/t",
-                  "v = t/d",
-                  "v = d × t"
-                ],
-                "answer": 0
+                "question": "question about the material",
+                "options": ["option 1", "option 2", "option 3","option 4"],
+                "answer": random number 0-3 represents the answer
               },
-              {
-                "question": "Which of the following is a vector quantity?",
-                "options": [
-                  "Speed",
-                  "Velocity",
-                  "Distance"
-                ],
-                "answer": 1
-              }
             ]
           }
         }
@@ -115,37 +92,6 @@ function generatePrompt(lessons: string[], material: string) {
     }
   ]
 }
-## schema explanation :
-      'date': The current date of study.
-
-    'content': A list of subjects and their corresponding study materials for the day.
-
-        'subject': The name of the subject (e.g., 'Physics').
-
-        'title': The specific topic covered under the subject (e.g., 'Kinematics').
-
-        'material': A list of different types of materials associated with the subject and topic.
-
-            'type': The type of material (e.g., 'read', 'video', 'questions').
-
-            'content': The actual material, which varies depending on the type.
-
-                'video.content':
-
-                    'title': The title of the video.
-
-                    'url': The URL to access the video.
-
-                'questions.content':
-
-                    'type': The type of question (e.g., 'mcq').
-
-                    'question': The actual question text.
-
-                    'options': A list of possible answers for the question.
-
-                    'answer': The index of the correct option in the list of options.
-
 ## Response format:
 Respond in a valid JSON format only, nothing else.
 ## Response:
@@ -171,8 +117,11 @@ export async function contentAnswer(lessons: string[], material: string) {
 // Example test in main
 async function main() {
   const fakeLessons = ['Algebra', 'Trigonometry', 'Calculus']
-  const fakeMaterial =
-    'Comprehensive notes, practice problems, and video explanations.'
+  let lessons = ''
+  for(let i=0;i<fakeLessons.length;i++){
+    lessons += fakeLessons[i]
+  }
+  const fakeMaterial = await search(lessons)
 
   const studyContent = await contentAnswer(fakeLessons, fakeMaterial)
   console.log(studyContent)

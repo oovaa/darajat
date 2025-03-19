@@ -1,22 +1,9 @@
-const axios = require('axios');
 import { Router } from "express";
 import { contentAnswer } from "../../lib/contentGenerator";
 
 const contentRouter = Router();
-const DataBaseURL = Bun.env.DATABASE_URL
 
 
-async function postData(data:string) {
-
-    try {
-      const response = await axios.post('', {
-        query:data
-      });
-      return response.data
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
-  }
 contentRouter.post("/generate-content", async (req, res) => {
     let data = ""
 
