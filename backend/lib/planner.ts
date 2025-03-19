@@ -1,10 +1,6 @@
-import { JsonOutputParser } from '@langchain/core/output_parsers'
-import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { llm } from './llm'
-import type { StudyPlan } from '../src/types/plannerResponse'
 import { RunnableSequence } from '@langchain/core/runnables'
 import { syllabus } from './syllabus'
-import { calcSyllabus } from './syllabus'
 // Initialize the OpenAI model
 const model = llm
 
@@ -20,7 +16,7 @@ function generatePrompt(hoursPerDay: any, lastYear: any, yearsMissed: any) {
   ## Task:
   Create a structured study plan covering the above subjects, considering the user's background. The plan must be formatted as valid JSON and follow this schema:
   
-  ## USE THE CURRENT DATE TO REPRESENT MONTHS AND DAYS
+  ## USE THE CURRENT DATE TO REPRESENT MONTHS AND DAYS today is march 2025
 
   {
     "plan": [
@@ -64,7 +60,6 @@ async function createChain() {
   const chain = RunnableSequence.from([
     async (input) =>
       generatePrompt(input.hoursPerDay, input.lastYear, input.yearsMissed),
-
     model,
   ])
   return chain
