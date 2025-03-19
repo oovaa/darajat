@@ -6,6 +6,8 @@ export interface ReadingProps {
 }
 
 const ReadingContent: React.FC<ReadingProps> = ({ title, summary }) => {
+
+
     return (
         <div>
             <h3 className='font-bold text-lg'>{title}</h3>

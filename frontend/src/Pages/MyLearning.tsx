@@ -4,19 +4,18 @@ import logoHead from '../assets/darajat-logo.png';
 import { MainLink } from '../Container';
 import { Link } from 'react-router-dom';
 import { QuestionProps } from '../Components/QuestionContent';
-
+// import axios from 'axios';
 
 export interface Material {
     id?: number;
     type: 'read' | 'video' | 'questions';
-    title: string;
+    title?: string;
     content:
     | string // For 'read' type
     | { title: string; url: string }[] // For 'video' type
     | { type: 'mcqs'; questions: QuestionProps[] }; // For 'questions' type
     progress?: number;
 }
-
 
 export interface SubjectContent {
     id?: number;
@@ -25,75 +24,124 @@ export interface SubjectContent {
     material: Material[];
 }
 
-export const fetchedSubjects: SubjectContent[] = [
-    {
-        subject: 'Physics',
-        title: 'Kinematics (Velocity & Acceleration)',
-        material: [
-            {
-                type: 'read',
-                title: 'Functions - Chapter 2',
-                content: 'This is the text content for the reading material. (physics)',
-            },
-            {
-                type: 'video',
-                title: 'Understanding Kinematics',
-                content: [
-                    {
-                        title: 'Introduction to Kinematics',
-                        url: 'https://www.youtube.com/watch?v=-tekPImQcU0',
-                    },
-                ],
-            },
-            {
-                type: 'questions',
-                title: 'Practice Questions',
-                content: {
-                    type: 'mcqs',
-                    questions: [
+export interface FetchedData {
+    date: string;
+    content: SubjectContent[];
+}
+
+export const dummyData: FetchedData = {
+    date: '2025-03-16',
+    content: [
+        {
+            subject: 'Physics',
+            title: 'Kinematics',
+            material: [
+                {
+                    type: 'read',
+                    title: 'Reading - Functions - Chapter 2',
+                    content: 'URL or text content here',
+                },
+                {
+
+                    type: 'video',
+                    content: [
                         {
-                            question: 'What is the formula for velocity?',
-                            options: ['v = d/t', 'v = t/d', 'v = d × t'],
-                            answer: 0,
-                        },
-                        {
-                            question: 'Which of the following is a vector quantity?',
-                            options: ['Speed', 'Velocity', 'Distance'],
-                            answer: 1,
+                            title: 'Understanding Kinematics',
+                            url: 'https://example.com/video-kinematics',
                         },
                     ],
                 },
-            },
-        ],
-    },
-    {
-        subject: 'Math',
-        title: 'Functions (Introduction & Types)',
-        material: [
-            {
-                type: 'read',
-                title: '2.4 Graphing Functions',
-                content: 'This is the text content for the introduction to functions. (math)',
-            },
-            {
-                type: 'video',
-                title: 'Understanding Functions',
-                content: [
-                    {
-                        title: 'Basics of Functions',
-                        url: 'https://www.youtube.com/watch?v=-tekPImQcU0',
+                {
+                    type: 'questions',
+                    content: {
+                        type: 'mcqs',
+                        questions: [
+                            {
+                                question: 'What is the formula for velocity?',
+                                options: ['v = d/t', 'v = t/d', 'v = d × t'],
+                                answer: 0,
+                            },
+                            {
+                                question: 'Which of the following is a vector quantity?',
+                                options: ['Speed', 'Velocity', 'Distance'],
+                                answer: 1,
+                            },
+                        ],
                     },
-                ],
-            },
-        ],
-    },
-];
+                },
+            ],
+        },
+        {
+            subject: 'Mathematics',
+            title: 'Functions',
+            material: [
+                {
+                    type: 'read',
+                    title: 'Introduction to Functions',
+                    content: 'URL or text content here',
+                },
+                {
+                    type: 'video',
+                    content: [
+                        {
+                            title: 'Functions and Their Graphs',
+                            url: 'https://example.com/video-functions',
+                        },
+                    ],
+                },
+                {
+                    type: 'questions',
+                    content: {
+                        type: 'mcqs',
+                        questions: [
+                            {
+                                question: 'What is the domain of f(x) = 1/x?',
+                                options: ['All real numbers', 'All real numbers except 0', 'Only positive numbers'],
+                                answer: 1,
+                            },
+                        ],
+                    },
+                },
+            ],
+        },
+    ],
+};
 
 const MyLearning: React.FC = () => {
     const [subjects, setSubjects] = useState<SubjectContent[]>([]);
+    const [date, setDate] = useState<string>('');
+
     const [expanded, setExpanded] = useState<number | null>(null);
 
     useEffect(() => {
+        // Fetch data from API
+        // const fetchData = async () => {
+        //     try {
+        //         const response = await axios.get<FetchedData>('#');
+
+        //         const assignIds = (subjects: SubjectContent[]) => {
+        //             let subjectId = 1;
+        //             let materialId = 1;
+        //             return subjects.map(subject => ({
+        //                 ...subject,
+        //                 id: subjectId++,
+        //                 material: subject.material.map(material => ({
+        //                     ...material,
+        //                     id: materialId++
+        //                 }))
+        //             }));
+        //         };
+
+        //         setDate(response.data.date);
+        //         setSubjects(assignIds(response.data.content));
+        //     }
+        //     catch (err) {
+        //         console.error('Error fetching data:', err);
+        //     }
+        // }
+
+        // fetchData();
+
         // Assign unique IDs to subjects and materials
         const assignIds = (subjects: SubjectContent[]) => {
             let subjectId = 1;
@@ -107,7 +155,10 @@ const MyLearning: React.FC = () => {
                 }))
             }));
         };
-        setSubjects(assignIds(fetchedSubjects));
+
+        setDate(dummyData.date);
+        setSubjects(assignIds(dummyData.content));
+
     }, []);
 
     const togglesubject = (id: number) => {
@@ -129,7 +180,7 @@ const MyLearning: React.FC = () => {
                 <div className="week-subjects col-span-8 items-start">
                     <div className="week-title">
                         <h3 className="font-bold m-0 p-0">Week 2</h3>
-                        <p>Thursday, March 14</p>
+                        <p>{new Date(date).toLocaleDateString()}</p>
                     </div>
                     {subjects.map((subject) => (
                         <div key={subject.id} className="border my-2 p-1">

@@ -11,7 +11,7 @@ const App = () => {
             <Route path='myLearning' element={<MyLearning/>} />
             <Route path='dashboard' element={<Dashboard/>} />
             <Route path='learningPlan' element={<LearningPlan/>} />
-            <Route path='/lesson/:subject/:title/:type' element={<LessonPage/>} />
+            <Route path='/lesson/:subject/:title/:type' element={<LessonPage />} />
           </Route>
           <Route path='onboarding' element={<Onboarding />} />
         </Routes>

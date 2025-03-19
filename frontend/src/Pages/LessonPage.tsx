@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import logoHead from '../assets/darajat-logo.png';
 import { QuestionContent, VideoContent, ReadingContent, FadeIn, MainLink } from '../Container';
 import { useParams } from 'react-router-dom';
-import { fetchedSubjects, SubjectContent } from './MyLearning';
+import { dummyData, SubjectContent } from './MyLearning';
 
 interface LessonPageProps {
     content: SubjectContent[];
 }
 
-const LessonPage: React.FC<LessonPageProps> = ({ content = fetchedSubjects }) => {
+const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) => {
 
     const [currentSubjectIndex, setCurrentSubjectIndex] = useState(0);
     const [currentMaterialIndex, setCurrentMaterialIndex] = useState(0);
 
     const { subject, title, type } = useParams<{ subject: string; title: string; type: string }>();
+
     useEffect(() => {
+    
         // Find the lesson based on the subject and title from the URL
         const lessonIndex = content.findIndex(lesson => lesson.subject === subject && lesson.title === title);
 
@@ -27,6 +29,8 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = fetchedSubjects }) =>
             }
         }
     }, [subject, title, type, content]);
+
+
     const currentSubject = content[currentSubjectIndex];
     const currentMaterial = currentSubject.material[currentMaterialIndex];
 
@@ -95,9 +99,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = fetchedSubjects }) =>
             );
         }
         return true;
-
     };
-
     return (
         <div id='lesson-page' className="relative h-full">
             <div className="logo-head flex justify-start items-center">
@@ -123,8 +125,6 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = fetchedSubjects }) =>
                     <div className="lesson-content">
                         <h3 className="content-title font-bold text-xl mt-2">{currentMaterial.type} - {currentMaterial.title}</h3>
                         <div className="main-content mt-5">
-
-
                             {currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' && 'questions' in currentMaterial.content && Array.isArray(currentMaterial.content.questions) &&
                                 currentMaterial.content.questions.map((q, index) => (
                                     <FadeIn key={index}>
@@ -150,53 +150,6 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = fetchedSubjects }) =>
                                     <ReadingContent title={currentMaterial.title || ''} summary={currentMaterial.content} />
                                 </FadeIn>
                             }
-
-                            {/* {material.type === 'video' && Array.isArray(material.content) &&
-                                        material.content.map((video, index) => (
-                                            <FadeIn key={index}>
-                                                <VideoContent url={video.url} />
-                                            </FadeIn>
-                                        ))
-                                    }
-                                    {material.type === 'read' && typeof material.content === 'string' &&
-                                        <FadeIn>
-                                            <ReadingContent title={material.title || ''} summary={material.content} />
-                                        </FadeIn>
-                                    } */}
-                            {/* {currentMaterial.type === 'questions' &&
-                                typeof currentMaterial.content === 'object' &&
-                                'questions' in currentMaterial.content &&
-                                Array.isArray(currentMaterial.content.questions) &&
-                                currentMaterial.content.questions.map((q, index) => (
-                                    <FadeIn>
-                                        <QuestionContent
-                                            key={index}
-                                            question={q.question}
-                                            options={q.options}
-                                            answer={q.answer}
-                                            selectedOption={selectedOptions[index] ?? null}
-                                            handleSelect={(optionIndex) => setSelectedOptions((prev) => ({ ...prev, [index]: optionIndex }))}
-
-                                        />
-                                    </FadeIn>
-                                ))
-                            } */}
-                            {/* {
-                                currentMaterial.type === 'video' &&
-                                Array.isArray(currentMaterial.content) &&
-                                currentMaterial.content.map((video, index) => (
-                                    <FadeIn>
-                                        <VideoContent key={index} url={video.url} />
-                                    </FadeIn>
-                                ))
-                            }
-                            {
-                                currentMaterial.type === 'read' &&
-                                typeof currentMaterial.content === 'string' &&
-                                <FadeIn>
-                                    <ReadingContent title={currentMaterial.title || ''} summary={currentMaterial.content} />
-                                </FadeIn>
-                            } */}
                         </div>
                     </div>
                     <div className="btns">
