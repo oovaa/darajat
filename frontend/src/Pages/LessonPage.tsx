@@ -9,14 +9,16 @@ interface LessonPageProps {
 }
 
 const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) => {
-
     const [currentSubjectIndex, setCurrentSubjectIndex] = useState(0);
     const [currentMaterialIndex, setCurrentMaterialIndex] = useState(0);
+    const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
+    const [resultMessages, setResultMessages] = useState<{ [key: number]: string }>({});
+    const [noPreviousMessage, setNoPreviousMessage] = useState(false);
+    const [lessonCompleted, setLessonCompleted] = useState(false);
 
     const { subject, title, type } = useParams<{ subject: string; title: string; type: string }>();
 
     useEffect(() => {
-
         // Find the lesson based on the subject and title from the URL
         const lessonIndex = content.findIndex(lesson => lesson.subject === subject && lesson.title === title);
 
@@ -30,38 +32,24 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
         }
     }, [subject, title, type, content]);
 
-
     const currentSubject = content[currentSubjectIndex];
     const currentMaterial = currentSubject.material[currentMaterialIndex];
 
-
     const totalProgress = currentSubject.material.reduce(
         (sum, material) => sum + (material.progress || 0), 0) / currentSubject.material.length;
-
-    // for questions
-    const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
-
-    const [noPreviousMessage, setNoPreviousMessage] = useState(false);
-    // lesson compelted functionlity 
-    const [lessonCompleted, setLessonCompleted] = useState(false);
 
     const handlePrevious = () => {
         if (currentMaterialIndex > 0) {
             setCurrentMaterialIndex((prev) => prev - 1);
             setNoPreviousMessage(false);
-        } else if (currentSubjectIndex > 0) {
-            setCurrentSubjectIndex((prev) => prev - 1);
-            setCurrentMaterialIndex(content[currentSubjectIndex - 1].material.length - 1);
-            setNoPreviousMessage(false);
         } else {
             setNoPreviousMessage(true);
             setTimeout(() => setNoPreviousMessage(false), 2000);
         }
-        setLessonCompleted(false)
+        setLessonCompleted(false);
     };
 
     const handleNext = () => {
-
         const updatedContent = [...content];
 
         if (!updatedContent[currentSubjectIndex].material[currentMaterialIndex].progress) {
@@ -70,20 +58,15 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
 
         if (currentMaterialIndex < currentSubject.material.length - 1) {
             setCurrentMaterialIndex((prev) => prev + 1);
-            // } else if (currentSubjectIndex < content.length - 1) {
-            //     setCurrentSubjectIndex(prev => prev + 1);
-            //     setCurrentMaterialIndex(0);
-        }
-        else {
+        } else {
             setLessonCompleted(true);
         }
     };
 
-
     const handleNextClick = (e: React.MouseEvent) => {
         if (currentMaterial.type === 'questions' && !allQuestionsAnswered()) {
-            e.preventDefault();
             alert('Please answer all questions before proceeding.');
+            e.preventDefault();
         } else {
             handleNext();  // Proceed with the next content
         }
@@ -100,6 +83,21 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
         }
         return true;
     };
+
+    const handleSelect = (questionIndex: number, optionIndex: number) => {
+        setSelectedOptions((prev) => ({ ...prev, [questionIndex]: optionIndex }));
+
+        const currentMaterial = content[currentSubjectIndex].material[currentMaterialIndex];
+        if (currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' && 'questions' in currentMaterial.content) {
+            const correctAnswer = currentMaterial.content.questions[questionIndex].answer;
+            if (optionIndex === correctAnswer) {
+                setResultMessages((prev) => ({ ...prev, [questionIndex]: 'Correct answer!' }));
+            } else {
+                setResultMessages((prev) => ({ ...prev, [questionIndex]: 'Incorrect answer. Try again.' }));
+            }
+        }
+    };
+
     return (
         <div id='lesson-page' className="relative h-full">
             <div className="logo-head flex justify-start items-center">
@@ -112,11 +110,10 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
                     <div className="progress-bar py-5 px-4 border">
                         <div className="prgoress-head mb-2 mx-2 flex justify-between">
                             <h4 className=''>
-                                {/* {currentMaterial.type === 'read' ? currentMaterial.title : (currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) ? currentMaterial.content[0].title : '')} */}
                                 {currentMaterial.type === 'read' ? currentMaterial.title :
-                                (currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) ? currentMaterial.content[0].title :
-                                    (currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' ? 'Multiple choice Question' : ''))}
-                                </h4>
+                                    (currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) ? currentMaterial.content[0].title :
+                                        (currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' ? 'Multiple choice Question' : ''))}
+                            </h4>
                             <span className="Percentage">{Math.round(totalProgress)}%</span>
                         </div>
                         <div className='flex bars'>
@@ -129,10 +126,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
                     </div>
                     <div className="lesson-content">
                         <h3 className="content-title font-bold text-xl mt-2">
-                            {/* {currentMaterial.type === 'read' ? currentMaterial.title :
-                                (currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) ? currentMaterial.content[0].title :
-                                    (currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' ? 'Multiple choice Question' : ''))} - {currentMaterial.title} */}
-                       {currentMaterial.type === 'read' && currentMaterial.title}
+                            {currentMaterial.type === 'read' && currentMaterial.title}
                         </h3>
                         <div className="main-content mt-5">
                             {currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' && 'questions' in currentMaterial.content && Array.isArray(currentMaterial.content.questions) &&
@@ -143,8 +137,13 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
                                             options={q.options}
                                             answer={q.answer}
                                             selectedOption={selectedOptions[index] ?? null}
-                                            handleSelect={(optionIndex) => setSelectedOptions((prev) => ({ ...prev, [index]: optionIndex }))}
+                                            handleSelect={(optionIndex) => handleSelect(index, optionIndex)}
                                         />
+                                        {resultMessages[index] && (
+                                            <div className={`result-message font-bold mt-2 ${selectedOptions[index] === q.answer ? 'text-green-500' : 'text-red-500'}`}>
+                                                {resultMessages[index]}
+                                            </div>
+                                        )}
                                     </FadeIn>
                                 ))
                             }
