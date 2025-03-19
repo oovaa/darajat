@@ -3,60 +3,119 @@ import { CircleCheckBig } from 'lucide-react';
 import logoHead from '../assets/darajat-logo.png';
 import { MainLink } from '../Container';
 import { Link } from 'react-router-dom';
+import { QuestionProps } from '../Components/QuestionContent';
 
-interface Task {
-    id: number;
+
+export interface Material {
+    id?: number;
+    type: 'read' | 'video' | 'questions';
     title: string;
-    task_type: "video" | "questions" | "read";
-    progress: number;
-    url: string;
+    content:
+    | string // For 'read' type
+    | { title: string; url: string }[] // For 'video' type
+    | { type: 'mcqs'; questions: QuestionProps[] }; // For 'questions' type
+    progress?: number;
 }
 
-interface Lesson {
-    id: number;
-    title: string;
+
+export interface SubjectContent {
+    id?: number;
     subject: string;
-    tasks: Task[];
+    title: string;
+    material: Material[];
 }
 
-const MyLearning: React.FC = () => {
-    const [lessons, setLessons] = useState<Lesson[]>([]);
-    const [expanded, setExpanded] = useState<number | null>(null);
-
-    useEffect(() => {
-        const fetchedLessons: Lesson[] = [
+export const fetchedSubjects: SubjectContent[] = [
+    {
+        subject: 'Physics',
+        title: 'Kinematics (Velocity & Acceleration)',
+        material: [
             {
-                id: 1,
-                title: 'Kinematics (Velocity & Acceleration)',
-                subject: 'Physics',
-                tasks: [{ id: 1, title: 'Start reading', task_type: "read", url: `read`, progress: 100 }],
+                type: 'read',
+                title: 'Functions - Chapter 2',
+                content: 'This is the text content for the reading material. (physics)',
             },
             {
-                id: 2,
-                title: 'Functions (Introduction & Types)',
-                subject: 'Math',
-                tasks: [
-                    { id: 1, title: 'Reading: Functions - Chapter 2', task_type: 'read', url: 'read', progress: 50 },
-                    { id: 2, title: 'Video Lecture: Understanding Functions', task_type: 'video', url: 'video', progress: 100 },
-                    { id: 3, title: 'Practice Problems', task_type: 'video', url: 'video', progress: 0 },
+                type: 'video',
+                title: 'Understanding Kinematics',
+                content: [
+                    {
+                        title: 'Introduction to Kinematics',
+                        url: 'https://www.youtube.com/watch?v=-tekPImQcU0',
+                    },
                 ],
             },
             {
-                id: 3,
-                title: 'Reinforcement & Review: Mini Quiz',
-                subject: 'Math',
-                tasks: [{ id: 1, title: 'Some quiz', task_type: 'questions', url: 'questions', progress: 100 }],
+                type: 'questions',
+                title: 'Practice Questions',
+                content: {
+                    type: 'mcqs',
+                    questions: [
+                        {
+                            question: 'What is the formula for velocity?',
+                            options: ['v = d/t', 'v = t/d', 'v = d × t'],
+                            answer: 0,
+                        },
+                        {
+                            question: 'Which of the following is a vector quantity?',
+                            options: ['Speed', 'Velocity', 'Distance'],
+                            answer: 1,
+                        },
+                    ],
+                },
             },
-        ];
-        setLessons(fetchedLessons);
+        ],
+    },
+    {
+        subject: 'Math',
+        title: 'Functions (Introduction & Types)',
+        material: [
+            {
+                type: 'read',
+                title: '2.4 Graphing Functions',
+                content: 'This is the text content for the introduction to functions. (math)',
+            },
+            {
+                type: 'video',
+                title: 'Understanding Functions',
+                content: [
+                    {
+                        title: 'Basics of Functions',
+                        url: 'https://www.youtube.com/watch?v=-tekPImQcU0',
+                    },
+                ],
+            },
+        ],
+    },
+];
+
+const MyLearning: React.FC = () => {
+    const [subjects, setSubjects] = useState<SubjectContent[]>([]);
+    const [expanded, setExpanded] = useState<number | null>(null);
+
+    useEffect(() => {
+        // Assign unique IDs to subjects and materials
+        const assignIds = (subjects: SubjectContent[]) => {
+            let subjectId = 1;
+            let materialId = 1;
+            return subjects.map(subject => ({
+                ...subject,
+                id: subjectId++,
+                material: subject.material.map(material => ({
+                    ...material,
+                    id: materialId++
+                }))
+            }));
+        };
+        setSubjects(assignIds(fetchedSubjects));
     }, []);
 
-    const toggleLesson = (id: number) => {
+    const togglesubject = (id: number) => {
         setExpanded(expanded === id ? null : id);
     };
 
-    const isLessonComplete = (lesson: Lesson) => {
-        return lesson.tasks.every(task => task.progress === 100);
+    const isSubjectComplete = (subject: SubjectContent) => {
+        return subject.material.every(task => task.progress === 100);
     };
 
     return (
@@ -67,30 +126,32 @@ const MyLearning: React.FC = () => {
             </div>
             <h1 className='title text-3xl font-bold my-5'>My Learning</h1>
             <div className='week flex flex-col-reverse lg:grid lg:grid-cols-12 gap-2 lg:gap-10'>
-                <div className="week-lessons col-span-8 items-start">
+                <div className="week-subjects col-span-8 items-start">
                     <div className="week-title">
                         <h3 className="font-bold m-0 p-0">Week 2</h3>
                         <p>Thursday, March 14</p>
                     </div>
-                    {lessons.map((lesson) => (
-                        <div key={lesson.id} className="border my-2 p-1">
+                    {subjects.map((subject) => (
+                        <div key={subject.id} className="border my-2 p-1">
                             <div className='flex justify-center items-center'>
-                                <CircleCheckBig size={'20px'} className={`mr-2 ${isLessonComplete(lesson) ? 'text-orange-400' : 'text-black'}`} />
+                                <CircleCheckBig size={'20px'} className={`mr-2 ${isSubjectComplete(subject) ? 'text-orange-400' : 'text-black'}`} />
                                 <button
                                     className="w-full flex justify-between items-center text-xs lg:text-sm font-semibold"
-                                    onClick={() => toggleLesson(lesson.id)}>
-                                    {lesson.subject} - {lesson.title}
-                                    <span className='mr-2 text-xl'>{expanded === lesson.id ? "-" : "+"}</span>
+                                    onClick={() => togglesubject(subject.id!)}>
+                                    {subject.subject} - {subject.title}
+                                    <span className='mr-2 text-xl'>{expanded === subject.id ? "-" : "+"}</span>
                                 </button>
                             </div>
-                            <div className={`task mt-2 space-y-2 overflow-hidden transition-all duration-500 ${expanded === lesson.id && lesson.tasks.length > 0 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                {lesson.tasks.map((task: Task) => (
-                                    <Link to={task.url} key={task.id} className='p-2 bg-gray-100 rounded flex items-center'>
-                                        <CircleCheckBig size={'20px'} className={`mr-2 ${task.progress === 100 ? 'text-orange-400' : 'text-black'}`} />
-                                        <span className='text-xs lg:text-sm flex-1'>{task.title}</span>
-                                        <span className="text-xs lg:text-sm text-gray-600 mr-auto">{task.progress}% Done</span>
-                                    </Link>
-                                ))}
+                            <div className={`material mt-2 space-y-2 overflow-hidden transition-all duration-500 ${expanded === subject.id && subject.material.length > 0 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                                {
+                                    subject.material.map((material: Material) => (
+                                        <Link to={`/lesson/${subject.subject}/${subject.title}/${material.type}`} key={material.id} className='p-2 bg-gray-100 rounded flex items-center'>
+                                            <CircleCheckBig size={'20px'} className={`mr-2 ${material.progress === 100 ? 'text-orange-400' : 'text-black'}`} />
+                                            <span className='text-xs lg:text-sm flex-1'>{material.type} - {material.title}</span>
+                                            <span className="text-xs lg:text-sm text-gray-600 mr-auto">{material.progress}% Done</span>
+                                        </Link>
+                                    ))
+                                }
                             </div>
                         </div>
                     ))}

@@ -1,104 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logoHead from '../assets/darajat-logo.png';
 import { QuestionContent, VideoContent, ReadingContent, FadeIn, MainLink } from '../Container';
-import { QuestionProps } from '../Components/QuestionContent';
+import { useParams } from 'react-router-dom';
+import { fetchedSubjects, SubjectContent } from './MyLearning';
 
-
-interface Material {
-    type: 'read' | 'video' | 'questions';
-    title?: string;
-    content:
-    | string // For 'read' type
-    | { title: string; url: string }[] // For 'video' type
-    | { type: 'mcqs'; questions: QuestionProps[] }; // For 'questions' type
-    progress?: number;
-}
-
-
-interface SubjectContent {
-    subject: string;
-    title: string;
-    material: Material[];
-}
 interface LessonPageProps {
     content: SubjectContent[];
 }
 
-const dummyContent: SubjectContent[] = [
-    {
-        subject: 'Physics',
-        title: 'Kinematics',
-        material: [
-            {
-                type: 'read',
-                title: 'Functions - Chapter 2',
-                content: 'This is the text content for the reading material. (physics)',
-            },
-            {
-                type: 'video',
-                title: 'Understanding Kinematics',
-                content: [
-                    {
-                        title: 'Introduction to Kinematics',
-                        url: 'https://www.youtube.com/watch?v=-tekPImQcU0',
-                    },
-                ],
-            },
-            {
-                type: 'questions',
-                title: 'Practice Questions',
-                content: {
-                    type: 'mcqs',
-                    questions: [
-                        {
-                            question: 'What is the formula for velocity?',
-                            options: ['v = d/t', 'v = t/d', 'v = d × t'],
-                            answer: 0,
-                        },
-                        {
-                            question: 'Which of the following is a vector quantity?',
-                            options: ['Speed', 'Velocity', 'Distance'],
-                            answer: 1,
-                        },
-                    ],
-                },
-            },
-        ],
-    },
-    {
-        subject: 'Math',
-        title: 'Functions',
-        material: [
-            {
-                type: 'read',
-                title: 'Functions (Introduction & Types)',
-                content: 'This is the text content for the introduction to functions. (math)',
-            },
-            {
-                type: 'video',
-                title: 'Understanding Functions',
-                content: [
-                    {
-                        title: 'Basics of Functions',
-                        url: 'https://www.youtube.com/watch?v=-tekPImQcU0',
-                    },
-                ],
-            },
-        ],
-    },
-];
-
-const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
-
+const LessonPage: React.FC<LessonPageProps> = ({ content = fetchedSubjects }) => {
 
     const [currentSubjectIndex, setCurrentSubjectIndex] = useState(0);
     const [currentMaterialIndex, setCurrentMaterialIndex] = useState(0);
 
+    const { subject, title, type } = useParams<{ subject: string; title: string; type: string }>();
+    useEffect(() => {
+        // Find the lesson based on the subject and title from the URL
+        const lessonIndex = content.findIndex(lesson => lesson.subject === subject && lesson.title === title);
+
+        if (lessonIndex !== -1) {
+            setCurrentSubjectIndex(lessonIndex);
+            // Find the material based on the type from the URL
+            const materialIndex = content[lessonIndex].material.findIndex(material => material.type === type);
+            if (materialIndex !== -1) {
+                setCurrentMaterialIndex(materialIndex);
+            }
+        }
+    }, [subject, title, type, content]);
     const currentSubject = content[currentSubjectIndex];
     const currentMaterial = currentSubject.material[currentMaterialIndex];
 
-
-    // calculating total progress for current subject
 
     const totalProgress = currentSubject.material.reduce(
         (sum, material) => sum + (material.progress || 0), 0) / currentSubject.material.length;
@@ -134,10 +65,10 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
         }
 
         if (currentMaterialIndex < currentSubject.material.length - 1) {
-            setCurrentMaterialIndex(prev => prev + 1);
-        } else if (currentSubjectIndex < content.length - 1) {
-            setCurrentSubjectIndex(prev => prev + 1);
-            setCurrentMaterialIndex(0);
+            setCurrentMaterialIndex((prev) => prev + 1);
+            // } else if (currentSubjectIndex < content.length - 1) {
+            //     setCurrentSubjectIndex(prev => prev + 1);
+            //     setCurrentMaterialIndex(0);
         }
         else {
             setLessonCompleted(true);
@@ -164,6 +95,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
             );
         }
         return true;
+
     };
 
     return (
@@ -192,7 +124,46 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
                         <h3 className="content-title font-bold text-xl mt-2">{currentMaterial.type} - {currentMaterial.title}</h3>
                         <div className="main-content mt-5">
 
-                            {currentMaterial.type === 'questions' &&
+
+                            {currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' && 'questions' in currentMaterial.content && Array.isArray(currentMaterial.content.questions) &&
+                                currentMaterial.content.questions.map((q, index) => (
+                                    <FadeIn key={index}>
+                                        <QuestionContent
+                                            question={q.question}
+                                            options={q.options}
+                                            answer={q.answer}
+                                            selectedOption={selectedOptions[index] ?? null}
+                                            handleSelect={(optionIndex) => setSelectedOptions((prev) => ({ ...prev, [index]: optionIndex }))}
+                                        />
+                                    </FadeIn>
+                                ))
+                            }
+                            {currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) &&
+                                currentMaterial.content.map((video, index) => (
+                                    <FadeIn key={index}>
+                                        <VideoContent url={video.url} />
+                                    </FadeIn>
+                                ))
+                            }
+                            {currentMaterial.type === 'read' && typeof currentMaterial.content === 'string' &&
+                                <FadeIn>
+                                    <ReadingContent title={currentMaterial.title || ''} summary={currentMaterial.content} />
+                                </FadeIn>
+                            }
+
+                            {/* {material.type === 'video' && Array.isArray(material.content) &&
+                                        material.content.map((video, index) => (
+                                            <FadeIn key={index}>
+                                                <VideoContent url={video.url} />
+                                            </FadeIn>
+                                        ))
+                                    }
+                                    {material.type === 'read' && typeof material.content === 'string' &&
+                                        <FadeIn>
+                                            <ReadingContent title={material.title || ''} summary={material.content} />
+                                        </FadeIn>
+                                    } */}
+                            {/* {currentMaterial.type === 'questions' &&
                                 typeof currentMaterial.content === 'object' &&
                                 'questions' in currentMaterial.content &&
                                 Array.isArray(currentMaterial.content.questions) &&
@@ -209,8 +180,8 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
                                         />
                                     </FadeIn>
                                 ))
-                            }
-                            {
+                            } */}
+                            {/* {
                                 currentMaterial.type === 'video' &&
                                 Array.isArray(currentMaterial.content) &&
                                 currentMaterial.content.map((video, index) => (
@@ -225,7 +196,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
                                 <FadeIn>
                                     <ReadingContent title={currentMaterial.title || ''} summary={currentMaterial.content} />
                                 </FadeIn>
-                            }
+                            } */}
                         </div>
                     </div>
                     <div className="btns">
@@ -262,10 +233,9 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyContent }) => {
                 <div className={`fixed top-0 left-0 w-full h-full bg-[rgba(33, 33, 33, 0.5)] backdrop-blur-md z-[98]`}></div>
             }
             <div className={`completion-message w-full h-full fixed top-0 left-0 text-xl flex justify-center items-center  z-[99] ${lessonCompleted ? 'scale-100' : 'scale-0'}`}>
-                <MainLink title='← Dashboard' route='/dashboard' className='bg-black! absolute top-3 left-3'/>
-                <h2 className='font-bold text-xl lg:text-3xl '>You completed all lessons for today <span className='inline-block animate-bounce'>🚀</span></h2>
+                <MainLink title='← Dashboard' route='/mylearning' className='bg-black! absolute top-3 left-3' />
+                <h2 className='font-bold text-xl lg:text-3xl '>You completed all lessons for this subject <span className='inline-block animate-bounce'>🚀</span></h2>
             </div>
-
         </div >
     )
 }
