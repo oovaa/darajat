@@ -16,7 +16,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
     const { subject, title, type } = useParams<{ subject: string; title: string; type: string }>();
 
     useEffect(() => {
-    
+
         // Find the lesson based on the subject and title from the URL
         const lessonIndex = content.findIndex(lesson => lesson.subject === subject && lesson.title === title);
 
@@ -111,7 +111,12 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
                     <h1 className='lesson-title text-2xl font-bold my-5'>{currentSubject.subject} - {currentSubject.title}</h1>
                     <div className="progress-bar py-5 px-4 border">
                         <div className="prgoress-head mb-2 mx-2 flex justify-between">
-                            <h4 className=''>{currentSubject.title}</h4>
+                            <h4 className=''>
+                                {/* {currentMaterial.type === 'read' ? currentMaterial.title : (currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) ? currentMaterial.content[0].title : '')} */}
+                                {currentMaterial.type === 'read' ? currentMaterial.title :
+                                (currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) ? currentMaterial.content[0].title :
+                                    (currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' ? 'Multiple choice Question' : ''))}
+                                </h4>
                             <span className="Percentage">{Math.round(totalProgress)}%</span>
                         </div>
                         <div className='flex bars'>
@@ -123,7 +128,12 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
                         </div>
                     </div>
                     <div className="lesson-content">
-                        <h3 className="content-title font-bold text-xl mt-2">{currentMaterial.type} - {currentMaterial.title}</h3>
+                        <h3 className="content-title font-bold text-xl mt-2">
+                            {/* {currentMaterial.type === 'read' ? currentMaterial.title :
+                                (currentMaterial.type === 'video' && Array.isArray(currentMaterial.content) ? currentMaterial.content[0].title :
+                                    (currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' ? 'Multiple choice Question' : ''))} - {currentMaterial.title} */}
+                       {currentMaterial.type === 'read' && currentMaterial.title}
+                        </h3>
                         <div className="main-content mt-5">
                             {currentMaterial.type === 'questions' && typeof currentMaterial.content === 'object' && 'questions' in currentMaterial.content && Array.isArray(currentMaterial.content.questions) &&
                                 currentMaterial.content.questions.map((q, index) => (
@@ -147,22 +157,19 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
                             }
                             {currentMaterial.type === 'read' && typeof currentMaterial.content === 'string' &&
                                 <FadeIn>
-                                    <ReadingContent title={currentMaterial.title || ''} summary={currentMaterial.content} />
+                                    <ReadingContent summary={currentMaterial.content} />
                                 </FadeIn>
                             }
                         </div>
                     </div>
                     <div className="btns">
-
                         <button
                             onClick={handlePrevious}
                             className={`bg-black text-white text-sm border-none px-5 py-1.5 absolute bottom-2 left-2 rounded-2xl hover:-translate-y-1 transition-all }`}
                         >
                             ◀ Previous
                         </button>
-
                         <p className={`text-black font-bold text-sm absolute bottom-12 left-2 transition-all ${noPreviousMessage ? 'scale-100' : 'scale-0'}`}>There is no more previous pages!</p>
-
                         <button
                             onClick={handleNextClick}
                             disabled={!allQuestionsAnswered()}  // Disable if not all questions are answered
@@ -170,7 +177,6 @@ const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) 
                         >
                             Next ▶
                         </button>
-
                     </div>
                 </div>
                 <div className='static-note col-span-3 lg:h-[160px] lg:w-[285px] my-3 shadow-md shadow-gray-400 py-3 bg-[#AFE9D9]'>

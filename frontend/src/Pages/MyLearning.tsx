@@ -38,7 +38,7 @@ export const dummyData: FetchedData = {
             material: [
                 {
                     type: 'read',
-                    title: 'Reading - Functions - Chapter 2',
+                    title: 'Functions - Chapter 2',
                     content: 'URL or text content here',
                 },
                 {
@@ -47,7 +47,7 @@ export const dummyData: FetchedData = {
                     content: [
                         {
                             title: 'Understanding Kinematics',
-                            url: 'https://example.com/video-kinematics',
+                            url: 'https://www.youtube.com/watch?v=JNFknI78WYY',
                         },
                     ],
                 },
@@ -85,7 +85,7 @@ export const dummyData: FetchedData = {
                     content: [
                         {
                             title: 'Functions and Their Graphs',
-                            url: 'https://example.com/video-functions',
+                            url: 'https://www.youtube.com/watch?v=JNFknI78WYY',
                         },
                     ],
                 },
@@ -95,6 +95,7 @@ export const dummyData: FetchedData = {
                         type: 'mcqs',
                         questions: [
                             {
+
                                 question: 'What is the domain of f(x) = 1/x?',
                                 options: ['All real numbers', 'All real numbers except 0', 'Only positive numbers'],
                                 answer: 1,
@@ -155,10 +156,8 @@ const MyLearning: React.FC = () => {
                 }))
             }));
         };
-
         setDate(dummyData.date);
         setSubjects(assignIds(dummyData.content));
-
     }, []);
 
     const togglesubject = (id: number) => {
@@ -198,7 +197,9 @@ const MyLearning: React.FC = () => {
                                     subject.material.map((material: Material) => (
                                         <Link to={`/lesson/${subject.subject}/${subject.title}/${material.type}`} key={material.id} className='p-2 bg-gray-100 rounded flex items-center'>
                                             <CircleCheckBig size={'20px'} className={`mr-2 ${material.progress === 100 ? 'text-orange-400' : 'text-black'}`} />
-                                            <span className='text-xs lg:text-sm flex-1'>{material.type} - {material.title}</span>
+                                            <span className='text-xs lg:text-sm flex-1'>
+                                                {material.type} - {material.type === 'read' ? material.title : (material.type === 'video' && Array.isArray(material.content) ? material.content[0].title : (material.type === 'questions' && typeof material.content === 'object' && 'type' in material.content ? material.content.type : ''))}
+                                            </span>
                                             <span className="text-xs lg:text-sm text-gray-600 mr-auto">{material.progress}% Done</span>
                                         </Link>
                                     ))

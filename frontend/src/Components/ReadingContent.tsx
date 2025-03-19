@@ -1,7 +1,7 @@
 import React from 'react'
 
 export interface ReadingProps {
-    title: string;
+    title?: string;
     summary: string;
 }
 
