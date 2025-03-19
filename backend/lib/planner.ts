@@ -10,6 +10,9 @@ const model = llm
 // Set up the parser with the StudyPlan type
 const parser = new JsonOutputParser<StudyPlan>()
 
+
+
+
 // Function to generate the prompt template string
 function generatePrompt(
   hoursPerDay: any,
