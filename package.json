@@ -1,0 +1,12 @@
+{
+    "name": "darajat",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "cd frontend && bun dev cd backend && bun run start"
+    },
+    "author": "",
+    "license": "ISC"
+
+}
