@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { contentAnswer } from "../../lib/contentGenerator";
-
+import { search } from "../../lib/material";
 export const contentRouter = Router();
 
 
@@ -11,7 +11,7 @@ contentRouter.post("/generate-content", async (req, res) => {
     lessons.array.forEach((element:string) => {
         data += element
     });
-    const material = await postData(data)
+    const material = await search(data)
 
     contentAnswer(lessons, material)
     if(lessons.length === 0){
