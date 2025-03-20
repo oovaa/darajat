@@ -13,6 +13,7 @@ html {
     background-color: #ffff;
 }
 
+
 ::-webkit-scrollbar-thumb {
     border-radius: 30px;
     background-color: orange;
@@ -32,13 +33,14 @@ button {
     outline: none;
     cursor: pointer;
 }
+
 .fade-in {
     opacity: 0;
-    transform: translateY(35px);
-    transition: all .9s ease-in-out;
+    transform: translateX(-10px);
+    transition: all .7s ease-in-out;
 }
 
 .fade-in.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
 }
