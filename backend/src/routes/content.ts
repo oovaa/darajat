@@ -14,11 +14,17 @@ contentRouter.post("/generate-content", async (req, res) => {
     const material = await search(data)
 
     contentAnswer(lessons, material)
-    if(lessons.length === 0){
-        return res.status(400).json({ error: "lessons must be a non-empty array" });
+    if (lessons.length === 0) {
+      return res
+        .status(400)
+        .json({ error: 'lessons must be a non-empty array' })
     }
-    if(material === undefined){
-        return res.status(400).json({ error: "Material is not defined" });
+    if (material === undefined) {
+      return res.status(400).json({ error: 'Material is not defined' })
     }
-    return res.status(200).json({ answer: contentAnswer(lessons,material) }); 
-});
+    return res.status(200).json({ answer: contentAnswer(lessons, material) })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: 'Failed to generate content' })
+  }
+})
