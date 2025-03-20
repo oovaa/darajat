@@ -4,6 +4,7 @@ import downImg from '../assets/select-dwon.svg';
 import { FadeIn, Header, MainLink } from '../Container';
 import axios from 'axios';
 import { generateContent } from '../Utils/generateContent';
+import { useNavigate } from 'react-router-dom';
 
 
 type paceValue = "Relaxed" | "Standard" | "Accelerated";
@@ -18,6 +19,7 @@ const Onboarding: React.FC = () => {
         yearsOutOfSchool: '',
         learningPace: ''
     });
+    const navigate = useNavigate();
     const [error, setError] = useState<string | null>('')
     const [loading, setLoading] = useState<boolean | null>(false)
     const handlePaceSelect = (pace: paceValue) => {
@@ -72,7 +74,11 @@ const Onboarding: React.FC = () => {
                             'Content-Type': 'application/json',
                         },
                     });
-                    console.log(secondResponse.data);
+                    if (secondResponse) {
+                        console.log(JSON.parse(secondResponse.data))
+                        localStorage.setItem('dayContent', JSON.stringify(secondResponse.data));
+                        navigate('/dashboard');
+                    }
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (error) {
                     setError('Failed to generate content. Please try again.');
@@ -93,7 +99,7 @@ const Onboarding: React.FC = () => {
     // // }
     return (
         <div className='min-h-screen'>
-            {loading && <div className="">Loading...</div>}
+            {loading && <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">Loading...</div>}
             <Header />
             <FadeIn>
                 <div id='onboarding' className='p-4 mt-12 lg:mt-0 lg:min-h-[calc(100vh-47.98px)] bg-[#FCF1CC] flex justify-center items-center'>
