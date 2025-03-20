@@ -3,6 +3,7 @@ import onboardingImg from '../assets/onboarding-img.png';
 import downImg from '../assets/select-dwon.svg';
 import { FadeIn, Header, MainLink } from '../Container';
 import axios from 'axios';
+import { generateContent } from '../Utils/generateContent';
 
 type paceValue = "Relaxed" | "Standard" | "Accelerated";
 
@@ -61,6 +62,17 @@ const Onboarding: React.FC = () => {
             if (response.data) {
                 localStorage.setItem('studyPlan', JSON.stringify(response.data));
                 console.log(response.data);
+                const processedData = generateContent(response.data);
+                console.log(processedData);
+
+                
+                const secondResponse = await axios.post('#', processedData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    
+                });
+                console.log(secondResponse.data);
             }
         } catch (error) {
             setError('Failed to fetch study plan. Please try again.');
