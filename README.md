@@ -1,2 +1,0 @@
-# darajat
-salam hack project

@@ -1,5 +1,3 @@
-import { JsonOutputParser } from '@langchain/core/output_parsers'
-import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { llm } from './llm'
 import { search } from './material'
 import { RunnableSequence } from '@langchain/core/runnables'
@@ -114,7 +112,7 @@ export async function contentAnswer(lessons: string[], material: string) {
   return response.content
 }
 
-// // Example test in main
+// Example test in main
 // async function main() {
 //   const fakeLessons = ['Algebra', 'Trigonometry', 'Calculus']
 //   let lessons = ''
