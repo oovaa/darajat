@@ -1,11 +1,13 @@
 import React from 'react'
 
 export interface ReadingProps {
-    title: string;
+    title?: string;
     summary: string;
 }
 
 const ReadingContent: React.FC<ReadingProps> = ({ title, summary }) => {
+
+
     return (
         <div>
             <h3 className='font-bold text-lg'>{title}</h3>
