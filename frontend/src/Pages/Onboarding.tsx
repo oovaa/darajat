@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import onboardingImg from '../assets/onboarding-img.png';
 import downImg from '../assets/select-dwon.svg';
 import { FadeIn, Header, MainLink } from '../Container';
-import { useData } from '../Hooks/useData';
 
 type paceValue = "Relaxed" | "Standard" | "Accelerated";
 
@@ -15,7 +14,6 @@ const Onboarding: React.FC = () => {
         yearsMissed: 0
     };
 
-    const { loading, error: dataError, sendData } = useData(dataToSend);
     const [selectedPace, setSelectedPace] = useState("");
     const [formData, setFormData] = useState({
         firstName: '',
@@ -53,11 +51,7 @@ const Onboarding: React.FC = () => {
         dataToSend.lastYear = parseInt(formData.lastCompletedGrade, 10);
         dataToSend.yearsMissed = parseInt(formData.yearsOutOfSchool, 10);
 
-        sendData();
-        // Handle loading, error, and data states
-        if (dataError) {
-            setError(dataError.message)
-        }
+        // Use Axios here 
     };
 
     // const [expanded, setExpanded] = useState<boolean>(false)
@@ -66,7 +60,7 @@ const Onboarding: React.FC = () => {
     // // }
     return (
         <div className='min-h-screen'>
-            {loading && <div className="loading-spinner">Loading...</div>}
+            {loading && <div className="">Loading...</div>}
             <Header />
             <FadeIn>
                 <div id='onboarding' className='p-4 mt-12 lg:mt-0 lg:min-h-[calc(100vh-47.98px)] bg-[#FCF1CC] flex justify-center items-center'>
