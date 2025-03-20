@@ -2,20 +2,11 @@ import React, { useState } from 'react';
 import onboardingImg from '../assets/onboarding-img.png';
 import downImg from '../assets/select-dwon.svg';
 import { FadeIn, Header, MainLink } from '../Container';
-import { useData } from '../Hooks/useData';
+import axios from 'axios';
 
 type paceValue = "Relaxed" | "Standard" | "Accelerated";
 
 const Onboarding: React.FC = () => {
-    // Define dataToSend before using it in useData
-    const dataToSend = {
-        hoursPerDay: 0, // Default or initial value
-        titles: [] as string[], // Specify that titles is an array of strings
-        lastYear: 0,
-        yearsMissed: 0
-    };
-
-    const { loading, error: dataError, sendData } = useData(dataToSend);
     const [selectedPace, setSelectedPace] = useState("");
     const [formData, setFormData] = useState({
         firstName: '',
@@ -25,10 +16,11 @@ const Onboarding: React.FC = () => {
         learningPace: ''
     });
     const [error, setError] = useState<string | null>('')
-
+    const [loading, setLoading] = useState<boolean | null>(false)
     const handlePaceSelect = (pace: paceValue) => {
         setSelectedPace(pace)
         setFormData({ ...formData, learningPace: pace });
+
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -38,7 +30,7 @@ const Onboarding: React.FC = () => {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const learningPaceHours = {
@@ -46,17 +38,34 @@ const Onboarding: React.FC = () => {
             Standard: 4,
             Accelerated: 6
         };
-
+        // Define dataToSend before using it in useData
+        const dataToSend = {
+            hoursPerDay: 0, // Default or initial value
+            titles: [] as string[], // Specify that titles is an array of strings
+            lastYear: 0,
+            yearsMissed: 0
+        };
         // Update the existing dataToSend object
         dataToSend.hoursPerDay = learningPaceHours[formData.learningPace as keyof typeof learningPaceHours];
         dataToSend.titles = ["Mathematics", "Physics", "Biology"];
         dataToSend.lastYear = parseInt(formData.lastCompletedGrade, 10);
         dataToSend.yearsMissed = parseInt(formData.yearsOutOfSchool, 10);
 
-        sendData();
-        // Handle loading, error, and data states
-        if (dataError) {
-            setError(dataError.message)
+        setLoading(true);
+        try {
+            const response = await axios.post('#', dataToSend, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (response.data) {
+                localStorage.setItem('studyPlan', JSON.stringify(response.data));
+                console.log(response.data);
+            }
+        } catch (error) {
+            setError('Failed to fetch study plan. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -116,7 +125,7 @@ const Onboarding: React.FC = () => {
                                     </div>
                                 </div>
                                 <button type="submit" className='bg-orange-400 text-white font-bold rounded-3xl px-12 py-2 mt-1 hover:-translate-y-1 transition-all'>Start →</button>
-                                <span className={`block my-2.5 scale-0 transition-all ${error ? 'scale-100' : ''}`}>{error}</span>
+                                <span className={` text-red-600 block my-2.5 scale-0 transition-all ${error ? 'scale-100' : ''}`}>{error}</span>
                             </form>
                         </div>
                         <div className="img-wrapper mt-8 lg:mt-0 flex justify-center">
