@@ -1,5 +1,5 @@
 import { llm } from './llm'
-import { search } from './material'
+import { search } from './search'
 import { RunnableSequence } from '@langchain/core/runnables'
 
 // Initialize the OpenAI model
@@ -113,16 +113,17 @@ export async function contentAnswer(lessons: string[], material: string) {
 }
 
 // Example test in main
-// async function main() {
-//   const fakeLessons = ['Algebra', 'Trigonometry', 'Calculus']
-//   let lessons = ''
-//   for(let i=0;i<fakeLessons.length;i++){
-//     lessons += fakeLessons[i]
-//   }
-//   const fakeMaterial = await search(lessons)
+async function main() {
+  const fakeLessons = ['Algebra', 'Trigonometry', 'Calculus']
+  let lessons = ''
+  for(let i=0;i<fakeLessons.length;i++){
+    lessons += fakeLessons[i]
+  }
+  const fakeMaterial = await search(lessons)
 
-//   const studyContent = await contentAnswer(fakeLessons, fakeMaterial)
-//   console.log(studyContent)
-// }
+  const studyContent = await contentAnswer(fakeLessons, fakeMaterial)
+  
+  return JSON.parse(studyContent)
+}
 
-// main()
+main()
