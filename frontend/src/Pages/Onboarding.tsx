@@ -69,7 +69,7 @@ const Onboarding: React.FC = () => {
                 console.log(processedData);
 
                 try {
-                    const secondResponse = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/generate-content`, processedData, {
+                    const secondResponse = await axios.post(`${import.meta.env.VITE_API_BASE_URL}generate-content`, processedData, {
                         headers: {
                             'Content-Type': 'application/json',
                         },

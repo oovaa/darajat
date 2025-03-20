@@ -108,6 +108,8 @@ export const dummyData: FetchedData = {
     ],
 };
 
+const stored
+
 const MyLearning: React.FC = () => {
     const [subjects, setSubjects] = useState<SubjectContent[]>([]);
     const [date, setDate] = useState<string>('');
