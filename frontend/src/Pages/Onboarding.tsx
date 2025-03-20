@@ -10,14 +10,6 @@ type paceValue = "Relaxed" | "Standard" | "Accelerated";
 
 const Onboarding: React.FC = () => {
 
-    // Define dataToSend before using it in useData
-    const dataToSend = {
-        hoursPerDay: 0, // Default or initial value
-        titles: [] as string[], // Specify that titles is an array of strings
-        lastYear: 0,
-        yearsMissed: 0
-    };
-
     const [selectedPace, setSelectedPace] = useState("");
     const [formData, setFormData] = useState({
         firstName: '',
@@ -49,10 +41,9 @@ const Onboarding: React.FC = () => {
             Standard: 4,
             Accelerated: 6
         };
-        // Define dataToSend before using it in useData
         const dataToSend = {
-            hoursPerDay: 0, // Default or initial value
-            titles: [] as string[], // Specify that titles is an array of strings
+            hoursPerDay: 0,
+            titles: [] as string[],
             lastYear: 0,
             yearsMissed: 0
         };
@@ -64,7 +55,7 @@ const Onboarding: React.FC = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post('#', dataToSend, {
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/plan`, dataToSend, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -72,18 +63,22 @@ const Onboarding: React.FC = () => {
             if (response.data) {
                 localStorage.setItem('studyPlan', JSON.stringify(response.data));
                 console.log(response.data);
-                const processedData = generateContent(response.data);
+                const processedData = {lessons: generateContent(response.data)}
                 console.log(processedData);
 
-                
-                const secondResponse = await axios.post('#', processedData, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    
-                });
-                console.log(secondResponse.data);
+                try {
+                    const secondResponse = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/generate-content`, processedData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    console.log(secondResponse.data);
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                } catch (error) {
+                    setError('Failed to generate content. Please try again.');
+                }
             }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setError('Failed to fetch study plan. Please try again.');
         } finally {
