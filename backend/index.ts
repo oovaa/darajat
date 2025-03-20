@@ -3,10 +3,12 @@ import cors from 'cors'
 import { requestLoggerMilddleware } from './src/middleware/loggerMiddleware'
 import { router } from './src/routes'
 import helmet from 'helmet'
+import compression from 'compression'
 
 const app = express()
 
 app.use(json())
+app.use(compression())
 app.use(cors())
 app.use(requestLoggerMilddleware)
 app.use(helmet())

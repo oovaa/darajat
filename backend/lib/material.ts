@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const DataBaseURL = Bun.env.DATABASE_URL
 
@@ -10,7 +10,7 @@ export async function search(data:string) {
       });
       console.log('Response:', response.data);
       return response.data
-    } catch (error) {
-      console.error('Error:', error.message);
+    } catch (error:unknown) {
+      console.error('Error:', (error as Error).message);
     }
   }
