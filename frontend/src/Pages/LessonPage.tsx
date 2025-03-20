@@ -2,25 +2,39 @@ import React, { useState, useEffect } from 'react';
 import logoHead from '../assets/darajat-logo.png';
 import { QuestionContent, VideoContent, ReadingContent, FadeIn, MainLink } from '../Container';
 import { useParams } from 'react-router-dom';
-import { dummyData, SubjectContent } from './MyLearning';
+import { dayContent, SubjectContent } from './MyLearning';
 
 interface LessonPageProps {
-    content: SubjectContent[];
+    content?: SubjectContent[];
 }
 
-const LessonPage: React.FC<LessonPageProps> = ({ content = dummyData.content }) => {
+const LessonPage: React.FC<LessonPageProps> = () => {
     const [currentSubjectIndex, setCurrentSubjectIndex] = useState(0);
     const [currentMaterialIndex, setCurrentMaterialIndex] = useState(0);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
     const [resultMessages, setResultMessages] = useState<{ [key: number]: string }>({});
     const [noPreviousMessage, setNoPreviousMessage] = useState(false);
     const [lessonCompleted, setLessonCompleted] = useState(false);
+    const [content, setContent] = useState<SubjectContent[]>([]);
 
     const { subject, title, type } = useParams<{ subject: string; title: string; type: string }>();
 
     useEffect(() => {
+        if (dayContent) {
+            try {
+                const parsedContent: SubjectContent[] = JSON.parse(dayContent).content;
+                console.log(parsedContent);
+                setContent(parsedContent);
+            } catch (error) {
+                console.error('Error parsing dayContent from localStorage', error);
+            }
+        } else {
+            console.error('No dayContent found in localStorage');
+        }
+
         // Find the lesson based on the subject and title from the URL
         const lessonIndex = content.findIndex(lesson => lesson.subject === subject && lesson.title === title);
+
 
         if (lessonIndex !== -1) {
             setCurrentSubjectIndex(lessonIndex);

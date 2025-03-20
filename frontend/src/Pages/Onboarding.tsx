@@ -57,7 +57,7 @@ const Onboarding: React.FC = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/plan`, dataToSend, {
+            const response = await axios.post(`https://b10bf1525f32e3.lhr.life/api/plan`, dataToSend, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -65,11 +65,11 @@ const Onboarding: React.FC = () => {
             if (response.data) {
                 localStorage.setItem('studyPlan', JSON.stringify(response.data));
                 console.log(response.data);
-                const processedData = {lessons: generateContent(response.data)}
+                const processedData = { lessons: generateContent(response.data) }
                 console.log(processedData);
 
                 try {
-                    const secondResponse = await axios.post(`${import.meta.env.VITE_API_BASE_URL}generate-content`, processedData, {
+                    const secondResponse = await axios.post(`https://b10bf1525f32e3.lhr.life/api/generate-content`, processedData, {
                         headers: {
                             'Content-Type': 'application/json',
                         },
@@ -79,12 +79,12 @@ const Onboarding: React.FC = () => {
                         localStorage.setItem('dayContent', JSON.stringify(secondResponse.data));
                         navigate('/dashboard');
                     }
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (error) {
                     setError('Failed to generate content. Please try again.');
                 }
             }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setError('Failed to fetch study plan. Please try again.');
         } finally {

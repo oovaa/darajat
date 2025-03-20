@@ -4,7 +4,6 @@ import logoHead from '../assets/darajat-logo.png';
 import { MainLink } from '../Container';
 import { Link } from 'react-router-dom';
 import { QuestionProps } from '../Components/QuestionContent';
-// import axios from 'axios';
 
 export interface Material {
     id?: number;
@@ -29,86 +28,87 @@ export interface FetchedData {
     content: SubjectContent[];
 }
 
-export const dummyData: FetchedData = {
-    date: '2025-03-16',
-    content: [
-        {
-            subject: 'Physics',
-            title: 'Kinematics',
-            material: [
-                {
-                    type: 'read',
-                    title: 'Functions - Chapter 2',
-                    content: 'URL or text content here',
-                },
-                {
+// export const dummyData: FetchedData = {
+//     date: '2025-03-16',
+//     content: [
+//         {
+//             subject: 'Physics',
+//             title: 'Kinematics',
+//             material: [
+//                 {
+//                     type: 'read',
+//                     title: 'Functions - Chapter 2',
+//                     content: 'URL or text content here',
+//                 },
+//                 {
 
-                    type: 'video',
-                    content: [
-                        {
-                            title: 'Understanding Kinematics',
-                            url: 'https://www.youtube.com/watch?v=JNFknI78WYY',
-                        },
-                    ],
-                },
-                {
-                    type: 'questions',
-                    content: {
-                        type: 'mcqs',
-                        questions: [
-                            {
-                                question: 'What is the formula for velocity?',
-                                options: ['v = d/t', 'v = t/d', 'v = d × t'],
-                                answer: 0,
-                            },
-                            {
-                                question: 'Which of the following is a vector quantity?',
-                                options: ['Speed', 'Velocity', 'Distance'],
-                                answer: 1,
-                            },
-                        ],
-                    },
-                },
-            ],
-        },
-        {
-            subject: 'Mathematics',
-            title: 'Functions',
-            material: [
-                {
-                    type: 'read',
-                    title: 'Introduction to Functions',
-                    content: 'URL or text content here',
-                },
-                {
-                    type: 'video',
-                    content: [
-                        {
-                            title: 'Functions and Their Graphs',
-                            url: 'https://www.youtube.com/watch?v=JNFknI78WYY',
-                        },
-                    ],
-                },
-                {
-                    type: 'questions',
-                    content: {
-                        type: 'mcqs',
-                        questions: [
-                            {
+//                     type: 'video',
+//                     content: [
+//                         {
+//                             title: 'Understanding Kinematics',
+//                             url: 'https://www.youtube.com/watch?v=JNFknI78WYY',
+//                         },
+//                     ],
+//                 },
+//                 {
+//                     type: 'questions',
+//                     content: {
+//                         type: 'mcqs',
+//                         questions: [
+//                             {
+//                                 question: 'What is the formula for velocity?',
+//                                 options: ['v = d/t', 'v = t/d', 'v = d × t'],
+//                                 answer: 0,
+//                             },
+//                             {
+//                                 question: 'Which of the following is a vector quantity?',
+//                                 options: ['Speed', 'Velocity', 'Distance'],
+//                                 answer: 1,
+//                             },
+//                         ],
+//                     },
+//                 },
+//             ],
+//         },
+//         {
+//             subject: 'Mathematics',
+//             title: 'Functions',
+//             material: [
+//                 {
+//                     type: 'read',
+//                     title: 'Introduction to Functions',
+//                     content: 'URL or text content here',
+//                 },
+//                 {
+//                     type: 'video',
+//                     content: [
+//                         {
+//                             title: 'Functions and Their Graphs',
+//                             url: 'https://www.youtube.com/watch?v=JNFknI78WYY',
+//                         },
+//                     ],
+//                 },
+//                 {
+//                     type: 'questions',
+//                     content: {
+//                         type: 'mcqs',
+//                         questions: [
+//                             {
 
-                                question: 'What is the domain of f(x) = 1/x?',
-                                options: ['All real numbers', 'All real numbers except 0', 'Only positive numbers'],
-                                answer: 1,
-                            },
-                        ],
-                    },
-                },
-            ],
-        },
-    ],
-};
+//                                 question: 'What is the domain of f(x) = 1/x?',
+//                                 options: ['All real numbers', 'All real numbers except 0', 'Only positive numbers'],
+//                                 answer: 1,
+//                             },
+//                         ],
+//                     },
+//                 },
+//             ],
+//         },
+//     ],
+// };
 
-const stored
+export const dayContent = localStorage.getItem('dayContent');
+
 
 const MyLearning: React.FC = () => {
     const [subjects, setSubjects] = useState<SubjectContent[]>([]);
@@ -117,50 +117,39 @@ const MyLearning: React.FC = () => {
     const [expanded, setExpanded] = useState<number | null>(null);
 
     useEffect(() => {
-        // Fetch data from API
-        // const fetchData = async () => {
-        //     try {
-        //         const response = await axios.get<FetchedData>('#');
-
-        //         const assignIds = (subjects: SubjectContent[]) => {
-        //             let subjectId = 1;
-        //             let materialId = 1;
-        //             return subjects.map(subject => ({
-        //                 ...subject,
-        //                 id: subjectId++,
-        //                 material: subject.material.map(material => ({
-        //                     ...material,
-        //                     id: materialId++
-        //                 }))
-        //             }));
-        //         };
-
-        //         setDate(response.data.date);
-        //         setSubjects(assignIds(response.data.content));
-        //     }
-        //     catch (err) {
-        //         console.error('Error fetching data:', err);
-        //     }
-        // }
-
-        // fetchData();
-
-        // Assign unique IDs to subjects and materials
-        const assignIds = (subjects: SubjectContent[]) => {
-            let subjectId = 1;
-            let materialId = 1;
-            return subjects.map(subject => ({
-                ...subject,
-                id: subjectId++,
-                material: subject.material.map(material => ({
-                    ...material,
-                    id: materialId++
-                }))
-            }));
-        };
-        setDate(dummyData.date);
-        setSubjects(assignIds(dummyData.content));
+        if (dayContent) {
+            try {
+                const parsedData: FetchedData = JSON.parse(dayContent);
+                console.log(parsedData);
+    
+                const assignIds = (subjects: SubjectContent[]) => {
+                    let subjectId = 1;
+                    let materialId = 1;
+                    return subjects.map(subject => ({
+                        ...subject,
+                        id: subjectId++,
+                        material: subject.material.map(material => ({
+                            ...material,
+                            id: materialId++
+                        }))
+                    }));
+                };
+    
+                if (Array.isArray(parsedData.content)) {
+                    setDate(parsedData.date);
+                    setSubjects(assignIds(parsedData.content));
+                    console.log(parsedData.content);
+                } else {
+                    console.error('Parsed data does not contain a valid subjects array');
+                }
+            } catch (error) {
+                console.error('Error parsing data from localStorage', error);
+            }
+        } else {
+            console.error('No data found in localStorage');
+        }
     }, []);
+
 
     const togglesubject = (id: number) => {
         setExpanded(expanded === id ? null : id);
@@ -195,6 +184,7 @@ const MyLearning: React.FC = () => {
                                 </button>
                             </div>
                             <div className={`material mt-2 space-y-2 overflow-hidden transition-all duration-500 ${expanded === subject.id && subject.material.length > 0 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                               
                                 {
                                     subject.material.map((material: Material) => (
                                         <Link to={`/lesson/${subject.subject}/${subject.title}/${material.type}`} key={material.id} className='p-2 bg-gray-100 rounded flex items-center'>
