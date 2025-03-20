@@ -5,9 +5,19 @@ import { FadeIn, Header, MainLink } from '../Container';
 import axios from 'axios';
 import { generateContent } from '../Utils/generateContent';
 
+
 type paceValue = "Relaxed" | "Standard" | "Accelerated";
 
 const Onboarding: React.FC = () => {
+
+    // Define dataToSend before using it in useData
+    const dataToSend = {
+        hoursPerDay: 0, // Default or initial value
+        titles: [] as string[], // Specify that titles is an array of strings
+        lastYear: 0,
+        yearsMissed: 0
+    };
+
     const [selectedPace, setSelectedPace] = useState("");
     const [formData, setFormData] = useState({
         firstName: '',
@@ -79,6 +89,7 @@ const Onboarding: React.FC = () => {
         } finally {
             setLoading(false);
         }
+
     };
 
     // const [expanded, setExpanded] = useState<boolean>(false)
@@ -87,7 +98,7 @@ const Onboarding: React.FC = () => {
     // // }
     return (
         <div className='min-h-screen'>
-            {loading && <div className="loading-spinner">Loading...</div>}
+            {loading && <div className="">Loading...</div>}
             <Header />
             <FadeIn>
                 <div id='onboarding' className='p-4 mt-12 lg:mt-0 lg:min-h-[calc(100vh-47.98px)] bg-[#FCF1CC] flex justify-center items-center'>
