@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
 import onboardingImg from '../assets/onboarding-img.png';
 import downImg from '../assets/select-dwon.svg';
-import axios from 'axios';
 import { FadeIn, Header, MainLink } from '../Container';
+import { useData } from '../Hooks/useData';
+
+type paceValue = "Relaxed" | "Standard" | "Accelerated";
 
 const Onboarding: React.FC = () => {
-    type paceValue = 'Relaxed' | 'Standard' | 'Accelerated';
-    const [selectedPace, setSelectedPace] = useState("");
+    // Define dataToSend before using it in useData
+    const dataToSend = {
+        hoursPerDay: 0, // Default or initial value
+        titles: [] as string[], // Specify that titles is an array of strings
+        lastYear: 0,
+        yearsMissed: 0
+    };
 
+    const { loading, error: dataError, sendData } = useData(dataToSend);
+    const [selectedPace, setSelectedPace] = useState("");
     const [formData, setFormData] = useState({
         firstName: '',
         age: '',
@@ -29,35 +38,35 @@ const Onboarding: React.FC = () => {
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-            const response = await axios.post('#', formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+        const learningPaceHours = {
+            Relaxed: 2,
+            Standard: 4,
+            Accelerated: 6
+        };
 
-            if (response.status === 200 || response.status === 201) {
-                console.log('Form submitted successfully:', response.data);
-                document.location.href = 'MyLearning'
-            } else {
-                console.error('Form submission failed:', response);
-            }
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            setError(`An error occurred. Please check your connection and try again.`);
+        // Update the existing dataToSend object
+        dataToSend.hoursPerDay = learningPaceHours[formData.learningPace as keyof typeof learningPaceHours];
+        dataToSend.titles = ["Mathematics", "Physics", "Biology"];
+        dataToSend.lastYear = parseInt(formData.lastCompletedGrade, 10);
+        dataToSend.yearsMissed = parseInt(formData.yearsOutOfSchool, 10);
 
+        sendData();
+        // Handle loading, error, and data states
+        if (dataError) {
+            setError(dataError.message)
         }
     };
 
-    const [expanded, setExpanded] = useState<boolean>(false)
-    const rotateArrow = (key: number) => {
-        setExpanded(!expanded);
-    }
+    // const [expanded, setExpanded] = useState<boolean>(false)
+    // // const rotateArrow = (key: number) => {
+    // //     setExpanded(!expanded);
+    // // }
     return (
         <div className='min-h-screen'>
+            {loading && <div className="loading-spinner">Loading...</div>}
             <Header />
             <FadeIn>
                 <div id='onboarding' className='p-4 mt-12 lg:mt-0 lg:min-h-[calc(100vh-47.98px)] bg-[#FCF1CC] flex justify-center items-center'>
@@ -77,7 +86,6 @@ const Onboarding: React.FC = () => {
                                 <div className="input-wrapper my-0.5 relative w-full">
                                     <select name='lastCompletedGrade' required className="w-full text-md py-1.5 px-2 bg-transparent outline-none border-b border-gray-400 appearance-none" value={formData.lastCompletedGrade} onChange={handleChange}>
                                         <option value="" disabled defaultValue={'Last compelted grade'}>Last compelted grade</option>
-                                        <option value="9">9</option>
                                         <option value="10">10</option>
                                         <option value="11">11</option>
                                         <option value="12">12</option>
@@ -90,8 +98,6 @@ const Onboarding: React.FC = () => {
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
                                     </select>
                                     <img src={downImg} alt="" className='w-3.5 absolute right-2 top-1/2 -translate-y-1/2 rotate-180' />
                                 </div>
