@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { contentAnswer } from "../../lib/contentGenerator";
 
-const contentRouter = Router();
+export const contentRouter = Router();
 
 
 contentRouter.post("/generate-content", async (req, res) => {
