@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { contentAnswer } from '../../lib/contentGenerator'
-import { search } from '../../lib/material'
+import { search } from '../../lib/search'
 
 export const contentRouter = Router()
 
