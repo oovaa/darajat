@@ -30,7 +30,7 @@ contentRouter.post('/generate-content', async (req, res) => {
     const answer = await contentAnswer(lessons, material)
 
     // Return the generated content
-    return res.status(200).json({answer})
+    return res.status(200).json(answer)
   } catch (error) {
     console.error(error)
     return res.status(500).json({ error: 'Failed to generate content' })
